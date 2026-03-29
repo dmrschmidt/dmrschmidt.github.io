@@ -13,7 +13,9 @@
       "Bash(curl -vsL --connect-timeout 10 --max-time 15 https://www.beingt.at)",
       "Bash(curl -vsL --connect-timeout 10 --max-time 15 https://beingt.at)",
       "WebFetch(domain:www.being.at)",
-      "mcp__Claude_Preview__preview_start"
+      "mcp__Claude_Preview__preview_start",
+      "Bash(sed -i '' 's|\\\\.\\\\./img/|img/|g' /Users/dmrschmidt/workspace/sites/dmrschmidt.github.io/index.html)",
+      "Bash(sed -i '' 's|href=\"\"imprint.html\"\"|href=\"\"imprint.html\"\"|g' /Users/dmrschmidt/workspace/sites/dmrschmidt.github.io/index.html)"
     ]
   }
 }
