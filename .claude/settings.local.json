@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /Users/dmrschmidt/workspace/sites/dmrschmidt.github.io -maxdepth 2 -type f \\\\\\(-name *.html -o -name *.json -o -name *.xml -o -name *.webmanifest \\\\\\))",
+      "Bash(/Users/dmrschmidt/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.2/skills/brainstorming/scripts/start-server.sh --project-dir /Users/dmrschmidt/workspace/sites/dmrschmidt.github.io)",
+      "WebFetch(domain:www.beingt.at)",
+      "WebFetch(domain:www.soundcard.io)",
+      "WebSearch",
+      "WebFetch(domain:apps.apple.com)",
+      "WebFetch(domain:beingt.at)",
+      "WebFetch(domain:web.archive.org)",
+      "Bash(curl -sL --connect-timeout 10 --max-time 15 https://www.beingt.at)",
+      "Bash(curl -vsL --connect-timeout 10 --max-time 15 https://www.beingt.at)",
+      "Bash(curl -vsL --connect-timeout 10 --max-time 15 https://beingt.at)",
+      "WebFetch(domain:www.being.at)",
+      "mcp__Claude_Preview__preview_start"
+    ]
+  }
+}

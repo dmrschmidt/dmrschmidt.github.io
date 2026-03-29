@@ -1,0 +1,106 @@
+<h2>Which design direction speaks to you?</h2>
+<p class="subtitle">These set the overall mood — color, typography, energy. We'll refine from here.</p>
+
+<div class="cards">
+  <!-- Option A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 50%, #16213e 100%); padding: 40px; min-height: 320px; position: relative; overflow: hidden;">
+      <!-- Floating accent elements -->
+      <div style="position: absolute; top: 20px; right: 20px; width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle, #ff6b35 0%, transparent 70%); opacity: 0.8; filter: blur(10px);"></div>
+      <div style="position: absolute; bottom: 40px; left: 30px; width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, #f7c948 0%, transparent 70%); opacity: 0.5; filter: blur(15px);"></div>
+      <div style="position: absolute; top: 50%; right: 15%; width: 60px; height: 60px; border-radius: 50%; background: radial-gradient(circle, #e84393 0%, transparent 70%); opacity: 0.6; filter: blur(8px);"></div>
+
+      <div style="position: relative; z-index: 1;">
+        <p style="font-family: 'Courier New', monospace; color: #ff6b35; font-size: 11px; letter-spacing: 4px; margin-bottom: 8px;">DENNIS SCHMIDT</p>
+        <h2 style="color: #ffffff; font-size: 36px; font-weight: 800; line-height: 1.1; margin: 0 0 12px 0; font-family: system-ui, -apple-system, sans-serif;">I build things<br>that <span style="background: linear-gradient(90deg, #ff6b35, #f7c948); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">spark joy</span>.</h2>
+        <p style="color: #8892b0; font-size: 13px; margin: 0;">Eng Manager · Entrepreneur · Techno Producer</p>
+      </div>
+
+      <!-- Simulated project cards -->
+      <div style="position: relative; z-index: 1; margin-top: 24px; display: flex; gap: 10px;">
+        <div style="flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px;">
+          <div style="width: 100%; height: 50px; background: linear-gradient(135deg, #ff6b35 0%, #f7c948 100%); border-radius: 6px; margin-bottom: 8px;"></div>
+          <p style="color: #ccd6f6; font-size: 11px; margin: 0; font-weight: 600;">SoundCard</p>
+          <p style="color: #8892b0; font-size: 9px; margin: 2px 0 0 0;">Postcards you can hear</p>
+        </div>
+        <div style="flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px;">
+          <div style="width: 100%; height: 50px; background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); border-radius: 6px; margin-bottom: 8px;"></div>
+          <p style="color: #ccd6f6; font-size: 11px; margin: 0; font-weight: 600;">being.at</p>
+          <p style="color: #8892b0; font-size: 9px; margin: 2px 0 0 0;">Every flame tells a story</p>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Dark & Warm</h3>
+      <p>Deep navy base with warm orange/gold accents. Glowing orbs, soft gradients, premium feel. Think: late-night Berlin studio vibes. Scroll reveals feel cinematic.</p>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: #faf8f5; padding: 40px; min-height: 320px; position: relative; overflow: hidden;">
+      <!-- Bold geometric shapes -->
+      <div style="position: absolute; top: -20px; right: -20px; width: 160px; height: 160px; background: #ff3d00; border-radius: 50%; opacity: 0.9;"></div>
+      <div style="position: absolute; bottom: 20px; left: -10px; width: 100px; height: 100px; background: #ffeb3b; border-radius: 12px; transform: rotate(15deg);"></div>
+      <div style="position: absolute; top: 40%; right: 30%; width: 70px; height: 70px; border: 4px solid #1a1a1a; border-radius: 50%;"></div>
+
+      <div style="position: relative; z-index: 1;">
+        <p style="font-family: 'Courier New', monospace; color: #ff3d00; font-size: 11px; letter-spacing: 4px; margin-bottom: 8px;">DENNIS SCHMIDT</p>
+        <h2 style="color: #1a1a1a; font-size: 38px; font-weight: 900; line-height: 1.05; margin: 0 0 12px 0; font-family: system-ui, -apple-system, sans-serif;">Make.<br>Ship.<br><span style="color: #ff3d00;">Repeat.</span></h2>
+        <p style="color: #666; font-size: 13px; margin: 0;">Berlin · Code · Sound · Light</p>
+      </div>
+
+      <!-- Simulated project strip -->
+      <div style="position: relative; z-index: 1; margin-top: 20px; display: flex; gap: 8px;">
+        <div style="flex: 1; background: #1a1a1a; border-radius: 8px; padding: 12px;">
+          <p style="color: #fff; font-size: 11px; margin: 0; font-weight: 700;">SoundCard</p>
+          <p style="color: #aaa; font-size: 9px; margin: 2px 0 0 0;">iOS · Postcards</p>
+        </div>
+        <div style="flex: 1; background: #ff3d00; border-radius: 8px; padding: 12px;">
+          <p style="color: #fff; font-size: 11px; margin: 0; font-weight: 700;">being.at</p>
+          <p style="color: rgba(255,255,255,0.8); font-size: 9px; margin: 2px 0 0 0;">Tracking · QR</p>
+        </div>
+        <div style="flex: 1; background: #ffeb3b; border-radius: 8px; padding: 12px;">
+          <p style="color: #1a1a1a; font-size: 11px; margin: 0; font-weight: 700;">MTZTGR</p>
+          <p style="color: #555; font-size: 9px; margin: 2px 0 0 0;">Techno · Berlin</p>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Bold & Bright</h3>
+      <p>Light cream base with punchy red/yellow accents and bold geometric shapes. Energetic, confident, graphic-design-forward. Scroll interactions feel snappy and playful.</p>
+    </div>
+  </div>
+
+  <!-- Option C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: linear-gradient(180deg, #0a0a0a 0%, #1a0a2e 100%); padding: 40px; min-height: 320px; position: relative; overflow: hidden;">
+      <!-- Neon grid lines -->
+      <div style="position: absolute; inset: 0; background:
+        linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px),
+        linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px);
+        background-size: 40px 40px;"></div>
+      <!-- Neon glow accents -->
+      <div style="position: absolute; top: 30px; right: 40px; width: 100px; height: 4px; background: #00ff88; box-shadow: 0 0 20px #00ff88, 0 0 40px rgba(0,255,136,0.3); border-radius: 2px;"></div>
+      <div style="position: absolute; bottom: 60px; right: 20px; width: 4px; height: 80px; background: #ff00aa; box-shadow: 0 0 20px #ff00aa, 0 0 40px rgba(255,0,170,0.3); border-radius: 2px;"></div>
+      <div style="position: absolute; top: 45%; left: 10px; width: 60px; height: 4px; background: #00ccff; box-shadow: 0 0 15px #00ccff; border-radius: 2px;"></div>
+
+      <div style="position: relative; z-index: 1;">
+        <p style="font-family: 'Courier New', monospace; color: #00ff88; font-size: 11px; letter-spacing: 4px; margin-bottom: 8px;">~/DENNIS.SCHMIDT</p>
+        <h2 style="color: #ffffff; font-size: 34px; font-weight: 800; line-height: 1.1; margin: 0 0 12px 0; font-family: system-ui, -apple-system, sans-serif;">Building at the<br>intersection of<br><span style="color: #00ff88; text-shadow: 0 0 20px rgba(0,255,136,0.5);">code</span> & <span style="color: #ff00aa; text-shadow: 0 0 20px rgba(255,0,170,0.5);">sound</span></h2>
+        <p style="color: #8892b0; font-size: 13px; margin: 0;">$ ls projects/ | wc -l → 15</p>
+      </div>
+
+      <!-- Terminal-style project list -->
+      <div style="position: relative; z-index: 1; margin-top: 20px; background: rgba(0,0,0,0.5); border: 1px solid rgba(0,255,136,0.15); border-radius: 8px; padding: 12px; font-family: 'Courier New', monospace; font-size: 10px;">
+        <p style="color: #00ff88; margin: 0 0 4px 0;">→ soundcard.io <span style="color: #8892b0">// postcards with audio</span></p>
+        <p style="color: #ff00aa; margin: 0 0 4px 0;">→ being.at <span style="color: #8892b0">// lighter odyssey</span></p>
+        <p style="color: #00ccff; margin: 0;">→ mtztgr.gr <span style="color: #8892b0">// techno production</span></p>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Neon Terminal</h3>
+      <p>Dark base with neon green/pink/cyan accents. Subtle grid overlay, terminal typography mixed with modern type. Hacker-creative energy. Scroll reveals have a digital/glitch flavor.</p>
+    </div>
+  </div>
+</div>

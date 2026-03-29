@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dennis Schmidt — Portfolio</title>
+  <meta name="description" content="Software Engineering Manager, Entrepreneur, Photographer and Techno Producer based in Berlin.">
+  <meta property="og:title" content="Dennis Schmidt — Portfolio">
+  <meta property="og:description" content="Software Engineering Manager, Entrepreneur, Photographer and Techno Producer based in Berlin.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../img/me.png">
+  <meta property="og:url" content="https://dmrschmidt.github.io/style-b/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#faf8f5',
+            punch: '#ff3d00',
+            sunny: '#ffeb3b',
+            dark: '#1a1a1a',
+          },
+          fontFamily: {
+            sans: ['Space Grotesk', 'system-ui', 'sans-serif'],
+            mono: ['DM Mono', 'monospace'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Space Grotesk', system-ui, sans-serif; background: #faf8f5; color: #1a1a1a; overflow-x: hidden; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #faf8f5; }
+    ::-webkit-scrollbar-thumb { background: #ff3d00; border-radius: 4px; }
+
+    /* Geometric shapes */
+    .geo-shape {
+      position: absolute;
+      pointer-events: none;
+      will-change: transform;
+      transition: transform 0.1s linear;
+    }
+
+    /* Hero morph circle */
+    .morph-circle {
+      width: clamp(280px, 50vw, 600px);
+      height: clamp(280px, 50vw, 600px);
+      background: #ff3d00;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      will-change: transform, border-radius;
+      transition: border-radius 0.05s linear, transform 0.05s linear;
+      z-index: 0;
+      opacity: 0.9;
+    }
+
+    /* Reveal animations */
+    .reveal { opacity: 0; transform: translateY(60px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    .reveal-left { opacity: 0; transform: translateX(-80px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    .reveal-right { opacity: 0; transform: translateX(80px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    .reveal.visible, .reveal-left.visible, .reveal-right.visible { opacity: 1; transform: translate(0, 0); }
+
+    /* Stagger children */
+    .stagger-item {
+      opacity: 0;
+      transform: translateY(40px) scale(0.96);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .stagger-item.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Hero load animation */
+    .hero-text { opacity: 0; transform: translateY(40px); animation: heroIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .hero-text:nth-child(1) { animation-delay: 0.1s; }
+    .hero-text:nth-child(2) { animation-delay: 0.25s; }
+    .hero-text:nth-child(3) { animation-delay: 0.4s; }
+    .hero-sub { opacity: 0; animation: heroIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards; }
+    @keyframes heroIn { to { opacity: 1; transform: translateY(0); } }
+
+    .hero-circle-enter {
+      animation: circleIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0s forwards;
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0);
+    }
+    @keyframes circleIn {
+      to { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* Category pills */
+    .cat-pill {
+      padding: 10px 24px;
+      border-radius: 999px;
+      border: 2px solid #1a1a1a;
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+      user-select: none;
+      background: transparent;
+      color: #1a1a1a;
+    }
+    .cat-pill:hover { background: #1a1a1a; color: #faf8f5; }
+    .cat-pill.active { background: #ff3d00; color: #fff; border-color: #ff3d00; }
+
+    /* Project card */
+    .project-card {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      break-inside: avoid;
+      margin-bottom: 24px;
+    }
+    .project-card:hover { transform: translateY(-8px); box-shadow: 8px 8px 0 #1a1a1a; }
+    .project-card img { width: 100%; display: block; aspect-ratio: 16/10; object-fit: cover; }
+
+    /* Social pill */
+    .social-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 32px;
+      border-radius: 999px;
+      border: 2px solid #1a1a1a;
+      font-weight: 500;
+      font-size: 1rem;
+      text-decoration: none;
+      color: #1a1a1a;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .social-pill:hover { transform: translateY(-3px); }
+    .social-pill.email:hover { background: #ff3d00; color: #fff; border-color: #ff3d00; }
+    .social-pill.twitter:hover { background: #1da1f2; color: #fff; border-color: #1da1f2; }
+    .social-pill.instagram:hover { background: #e4405f; color: #fff; border-color: #e4405f; }
+    .social-pill.facebook:hover { background: #1877f2; color: #fff; border-color: #1877f2; }
+    .social-pill.linkedin:hover { background: #0a66c2; color: #fff; border-color: #0a66c2; }
+    .social-pill svg { width: 22px; height: 22px; fill: currentColor; }
+
+    /* Masonry */
+    .masonry {
+      column-count: 3;
+      column-gap: 24px;
+    }
+    @media (max-width: 1023px) { .masonry { column-count: 2; } }
+    @media (max-width: 639px) { .masonry { column-count: 1; } }
+
+    /* Filter transition */
+    .project-card.filtered-out {
+      display: none;
+    }
+
+    /* Category badge on card */
+    .card-cat {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.02em;
+    }
+    .card-cat.venture { background: #ff3d00; color: #fff; }
+    .card-cat.techno { background: #1a1a1a; color: #fff; }
+    .card-cat.photography { background: #ffeb3b; color: #1a1a1a; }
+    .card-cat.opensource { background: #00c853; color: #fff; }
+
+    .archived-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      font-family: 'DM Mono', monospace;
+      background: #e0e0e0;
+      color: #888;
+      margin-left: 8px;
+    }
+
+    /* Horizontal scroll for pills */
+    .pills-track {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .pills-track::-webkit-scrollbar { display: none; }
+
+    /* Placeholder card for being.at */
+    .placeholder-img {
+      width: 100%;
+      aspect-ratio: 16/10;
+      background: linear-gradient(135deg, #1a1a1a 0%, #3a2000 50%, #ff6f00 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
+
+    /* Geo shapes in hero */
+    .geo-hero-1 {
+      width: clamp(60px, 10vw, 120px);
+      height: clamp(60px, 10vw, 120px);
+      background: #ffeb3b;
+      position: absolute;
+      top: 12%;
+      right: 10%;
+      transform: rotate(45deg);
+    }
+    .geo-hero-2 {
+      width: clamp(40px, 7vw, 80px);
+      height: clamp(40px, 7vw, 80px);
+      background: #ff3d00;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 18%;
+      left: 8%;
+    }
+    .geo-hero-3 {
+      width: clamp(80px, 12vw, 160px);
+      height: clamp(30px, 4vw, 50px);
+      background: #ffeb3b;
+      position: absolute;
+      bottom: 25%;
+      right: 15%;
+      border-radius: 4px;
+    }
+    .geo-hero-4 {
+      width: clamp(20px, 4vw, 40px);
+      height: clamp(20px, 4vw, 40px);
+      border: 3px solid #ff3d00;
+      position: absolute;
+      top: 25%;
+      left: 15%;
+      transform: rotate(15deg);
+    }
+    .geo-hero-5 {
+      width: clamp(50px, 8vw, 100px);
+      height: clamp(50px, 8vw, 100px);
+      border: 3px solid #1a1a1a;
+      border-radius: 50%;
+      position: absolute;
+      top: 60%;
+      right: 6%;
+    }
+
+    /* About section image frame */
+    .about-img-wrap {
+      position: relative;
+    }
+    .about-img-wrap::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      left: -12px;
+      right: 12px;
+      bottom: 12px;
+      border: 4px solid #ff3d00;
+      border-radius: 16px;
+      z-index: 0;
+    }
+    .about-img-wrap::after {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: -12px;
+      bottom: -12px;
+      background: #ffeb3b;
+      border-radius: 16px;
+      z-index: 0;
+    }
+    .about-img-wrap img {
+      position: relative;
+      z-index: 1;
+      border-radius: 16px;
+      width: 100%;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================ -->
+  <!-- HERO -->
+  <!-- ============================================================ -->
+  <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Morph circle -->
+    <div class="morph-circle hero-circle-enter" id="morphCircle"></div>
+
+    <!-- Floating geometric shapes -->
+    <div class="geo-shape geo-hero-1" data-parallax="0.04"></div>
+    <div class="geo-shape geo-hero-2" data-parallax="0.06"></div>
+    <div class="geo-shape geo-hero-3" data-parallax="0.03"></div>
+    <div class="geo-shape geo-hero-4" data-parallax="0.07"></div>
+    <div class="geo-shape geo-hero-5" data-parallax="0.05"></div>
+
+    <div class="relative z-10 text-center px-6">
+      <div class="hero-text">
+        <span class="block font-bold text-dark leading-none" style="font-size: clamp(3.5rem, 12vw, 10rem); letter-spacing: -0.04em;">Make.</span>
+      </div>
+      <div class="hero-text">
+        <span class="block font-bold leading-none" style="font-size: clamp(3.5rem, 12vw, 10rem); letter-spacing: -0.04em; color: #fff; -webkit-text-stroke: 3px #1a1a1a; paint-order: stroke fill;">Ship.</span>
+      </div>
+      <div class="hero-text">
+        <span class="block font-bold text-dark leading-none" style="font-size: clamp(3.5rem, 12vw, 10rem); letter-spacing: -0.04em;">Repeat.</span>
+      </div>
+      <div class="hero-sub mt-8">
+        <p class="font-mono text-dark/70 text-sm md:text-base tracking-wide">Dennis Schmidt &mdash; Berlin</p>
+        <p class="font-mono text-dark/50 text-xs md:text-sm mt-1">Engineering Manager / Entrepreneur / Creative</p>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 hero-sub">
+      <div class="w-6 h-10 border-2 border-dark/30 rounded-full flex items-start justify-center p-1">
+        <div class="w-1.5 h-3 bg-dark/40 rounded-full" style="animation: scrollDot 2s infinite;"></div>
+      </div>
+    </div>
+    <style>
+      @keyframes scrollDot {
+        0%, 100% { transform: translateY(0); opacity: 1; }
+        50% { transform: translateY(12px); opacity: 0.3; }
+      }
+    </style>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- ABOUT -->
+  <!-- ============================================================ -->
+  <section id="about" class="relative py-24 md:py-32 px-6 overflow-hidden">
+    <!-- Decorative shapes -->
+    <div class="geo-shape absolute -top-10 -right-10 w-40 h-40 bg-sunny/30 rounded-full" data-parallax="0.03"></div>
+    <div class="geo-shape absolute bottom-10 -left-6 w-24 h-24 border-4 border-punch/20 rotate-45" data-parallax="0.05"></div>
+
+    <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 md:gap-24 items-center">
+      <!-- Image -->
+      <div class="reveal-left order-2 md:order-1 flex justify-center">
+        <div class="about-img-wrap w-64 md:w-80">
+          <img src="../img/me.png" alt="Dennis Schmidt" loading="lazy">
+        </div>
+      </div>
+      <!-- Text -->
+      <div class="reveal-right order-1 md:order-2">
+        <p class="font-mono text-punch text-sm tracking-widest uppercase mb-4">About</p>
+        <h2 class="text-3xl md:text-5xl font-bold leading-tight mb-6" style="letter-spacing: -0.03em;">
+          Hello, I'm <span class="text-punch">Dennis Schmidt</span>
+        </h2>
+        <p class="text-lg md:text-xl leading-relaxed text-dark/80">
+          <span class="font-bold text-dark">Software Engineering Manager</span>,
+          <span class="font-bold text-punch">Entrepreneur</span>,
+          Enthusiast <span class="font-bold text-dark">Photographer</span> and
+          part-time <span class="font-bold text-dark">Techno Producer</span>
+          based in <span class="font-bold">Berlin</span>.
+        </p>
+        <p class="text-lg md:text-xl leading-relaxed text-dark/60 mt-4">
+          Here's a collection of things I made.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- PROJECTS -->
+  <!-- ============================================================ -->
+  <section id="projects" class="relative py-24 md:py-32 px-6 overflow-hidden">
+    <!-- Decorative -->
+    <div class="geo-shape absolute top-20 right-10 w-16 h-16 bg-punch/10 rounded-full" data-parallax="0.04"></div>
+    <div class="geo-shape absolute bottom-40 left-5 w-20 h-8 bg-sunny/30 rounded" data-parallax="0.06"></div>
+
+    <div class="max-w-6xl mx-auto">
+      <div class="reveal mb-12">
+        <p class="font-mono text-punch text-sm tracking-widest uppercase mb-4">Work</p>
+        <h2 class="text-3xl md:text-5xl font-bold" style="letter-spacing: -0.03em;">Projects</h2>
+      </div>
+
+      <!-- Category filter -->
+      <div class="reveal mb-12">
+        <div class="pills-track">
+          <button class="cat-pill active" data-filter="all">All</button>
+          <button class="cat-pill" data-filter="venture">Ventures</button>
+          <button class="cat-pill" data-filter="opensource">Open Source</button>
+          <button class="cat-pill" data-filter="photography">Photography</button>
+          <button class="cat-pill" data-filter="techno">Techno</button>
+        </div>
+      </div>
+
+      <!-- Masonry grid -->
+      <div class="masonry" id="projectGrid">
+
+        <!-- 1. SoundCard -->
+        <a href="https://www.soundcard.io" target="_blank" rel="noopener" class="project-card stagger-item block" data-category="venture">
+          <img src="../img/projects/soundcard.png" alt="SoundCard" loading="lazy">
+          <div class="p-6">
+            <span class="card-cat venture">Venture</span>
+            <h3 class="text-xl font-bold mt-3 mb-2">SoundCard</h3>
+            <p class="text-dark/60 text-sm leading-relaxed">An iOS app to send postcards with audio messages.</p>
+          </div>
+        </a>
+
+        <!-- 2. being.at -->
+        <a href="https://www.being.at" target="_blank" rel="noopener" class="project-card stagger-item block" data-category="venture">
+          <div class="placeholder-img"><span>&#128293;</span></div>
+          <div class="p-6">
+            <span class="card-cat venture">Venture</span>
+            <h3 class="text-xl font-bold mt-3 mb-2">being.at</h3>
+            <p class="text-dark/60 text-sm leading-relaxed">Track your lighter's journey across the world via QR codes.</p>
+          </div>
+        </a>
+
+        <!-- 3. Better Bitters -->
+        <a href="https://www.betterbitters.de" target="_blank" rel="noopener" class="project-card stagger-item block" data-category="venture">
+          <img src="../img/projects/betterbitters.png" alt="Better Bitters" loading="lazy">
+          <div class="p-6">
+            <span class="card-cat venture">Venture</span>
+            <h3 class="text-xl font-bold mt-3 mb-2">Better Bitters</h3>
+            <p class="text-dark/60 text-sm leading-relaxed">Handcrafted cocktail bitters to make your cocktails awesome.</p>
+          </div>
+        </a>
+
+        <!-- 4. Magnetic Memes -->
+        <a href="https://www.magneticmemes.com" target="_blank" rel="noopener" class="project-card stagger-item block" data-category="venture">
+          <img src="../img/projects/magneticmemes.png" alt="Magnetic Memes" loading="lazy">
+          <div class="p-6">
+            <span class="card-cat venture">Venture</span>
+            <h3 class="text-xl font-bold mt-3 mb-2">Magnetic Memes</h3>
+            <p class="text-dark/60 text-sm leading-relaxed">Create fridge magnets from your own memes.</p>
+          </div>
+        </a>
+
+        <!-- 5. GiftScoutr (archived) -->
+        <div class="project-card stagger-item" data-category="venture">
+          <img src="../img/projects/giftscoutr.png" alt="GiftScoutr" loading="lazy">
+          <div class="p-6">
+            <span class="card-cat venture">Venture</span>
+            <span class="archived-badge">Archived</span>
+            <h3 class="text-xl font-bold mt-3 mb-2">GiftScoutr</h3>
+            <p class="text-dark/60 text-sm leading-relaxed">An 'instagram for brick &amp; mortar stores' iOS app.</p>
+          </div>
+        </div>
+
+        <!-- 6. Pigeon Post (archived) -->
+        <div class="project-card stagger-item" data-category="venture">
+          <img src="../img/projects/pigeon-post.png" alt="Pigeon Post" loading="lazy">
+          <div class="p-6">
+            <span class="card-cat venture">Venture</span>
+            <span class="archived-badge">Archived</span>
+            <h3 class="text-xl font-bold mt-3 mb-2">Pigeon Post</h3>
+            <p class="text-dark/60 text-sm leading-relaxed">Scavenger hunt style postcard delivery community app.</p>
+          </div>
+        </div>
+
+        <!-- 7. MTZTGR -->
+        <a href="https://mtztgr.gr" target="_blank" rel="noopener" class="project-card stagger-item block" data-category="techno">
+          <img src="../img/projects/mtztgr.jpg" alt="MTZTGR" loading="lazy">
+          <div class="p-6">
+            <span class="card-cat techno">Techno</span>
+            <h3 class="text-xl font-bold mt-3 mb-2">MTZTGR</h3>
+            <p class="text-dark/60 text-sm leading-relaxed">My techno production moniker.</p>
+          </div>
+        </a>
+
+        <!-- 8. Luegen der Vergangenheit EP -->
+        <a href="https://soundcloud.com/mtztgr/sets/lies-from-the-past" target="_blank" rel="noopener" class="project-card stagger-item block" data-category="techno">
+          <img src="../img/projects/lies-from-the-past-ep.jpg" alt="L&uuml;gen der Vergangenheit EP" loading="lazy">
+          <div class="p-6">
+            <span class="card-cat techno">Techno</span>
+            <h3 class="text-xl font-bold mt-3 mb-2">L&uuml;gen der Vergangenheit EP</h3>
+            <p class="text-dark/60 text-sm leading-relaxed">3rd EP release.</p>
+          </div>
+        </a>
+
+        <!-- 9. Elements of Rave EP -->
+        <a href="https://soundcloud.com/mtztgr/sets/elements-of-rave" target="_blank" rel="noopener" class="project-card stagger-item block" data-category="techno">
+          <img src="../img/projects/elements-of-rave-ep.jpg" alt="Elements of Rave EP" loading="lazy">
+          <div class="p-6">
+            <span class="card-cat techno">Techno</span>
+            <h3 class="text-xl font-bold mt-3 mb-2">Elements of Rave EP</h3>
+            <p class="text-dark/60 text-sm leading-relaxed">2nd EP release.</p>
+          </div>
+        </a>
+
+        <!-- 10. What If EP -->
+        <a href="https://soundcloud.com/mtztgr/sets/what-if" target="_blank" rel="noopener" class="project-card stagger-item block" data-category="techno">
+          <img src="../img/projects/what-if-ep.jpg" alt="What If EP" loading="lazy">
+          <div class="p-6">
+            <span class="card-cat techno">Techno</span>
+            <h3 class="text-xl font-bold mt-3 mb-2">What If EP</h3>
+            <p class="text-dark/60 text-sm leading-relaxed">1st EP release.</p>
+          </div>
+        </a>
+
+        <!-- 11. Onism Vol. 1 -->
+        <a href="https://soundcloud.com/obscuresorrows/mtztgr-somtam?in=mtztgr/sets/onism-vol-1-osrva001" target="_blank" rel="noopener" class="project-card stagger-item block" data-category="techno">
+          <img src="../img/projects/onism-vol-1.jpg" alt="Onism Vol. 1" loading="lazy">
+          <div class="p-6">
+            <span class="card-cat techno">Techno</span>
+            <h3 class="text-xl font-bold mt-3 mb-2">Onism Vol. 1</h3>
+            <p class="text-dark/60 text-sm leading-relaxed">VA compilation release.</p>
+          </div>
+        </a>
+
+        <!-- 12. 500px Portfolio -->
+        <a href="https://500px.com/p/dmrschmidt?view=photos" target="_blank" rel="noopener" class="project-card stagger-item block" data-category="photography">
+          <img src="../img/projects/500px.jpg" alt="500px Portfolio" loading="lazy">
+          <div class="p-6">
+            <span class="card-cat photography">Photography</span>
+            <h3 class="text-xl font-bold mt-3 mb-2">500px Portfolio</h3>
+            <p class="text-dark/60 text-sm leading-relaxed">Some of my photos.</p>
+          </div>
+        </a>
+
+        <!-- 13. DSWaveformImage -->
+        <a href="https://github.com/dmrschmidt/dswaveformimage" target="_blank" rel="noopener" class="project-card stagger-item block" data-category="opensource">
+          <img src="../img/projects/dswaveformimage.png" alt="DSWaveformImage" loading="lazy">
+          <div class="p-6">
+            <span class="card-cat opensource">Open Source</span>
+            <h3 class="text-xl font-bold mt-3 mb-2">DSWaveformImage</h3>
+            <p class="text-dark/60 text-sm leading-relaxed">Generate waveform images from audio files in iOS.</p>
+          </div>
+        </a>
+
+        <!-- 14. SwiftColorWheel -->
+        <a href="https://github.com/dmrschmidt/swiftcolorwheel" target="_blank" rel="noopener" class="project-card stagger-item block" data-category="opensource">
+          <img src="../img/projects/swiftcolorwheel.jpg" alt="SwiftColorWheel" loading="lazy">
+          <div class="p-6">
+            <span class="card-cat opensource">Open Source</span>
+            <h3 class="text-xl font-bold mt-3 mb-2">SwiftColorWheel</h3>
+            <p class="text-dark/60 text-sm leading-relaxed">Delightful color picker wheel for iOS in Swift.</p>
+          </div>
+        </a>
+
+        <!-- 15. QRCode -->
+        <a href="https://github.com/dmrschmidt/qrcode" target="_blank" rel="noopener" class="project-card stagger-item block" data-category="opensource">
+          <img src="../img/projects/qrcode.png" alt="QRCode" loading="lazy">
+          <div class="p-6">
+            <span class="card-cat opensource">Open Source</span>
+            <h3 class="text-xl font-bold mt-3 mb-2">QRCode</h3>
+            <p class="text-dark/60 text-sm leading-relaxed">A customizable QRCode generator in Swift.</p>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- CONTACT -->
+  <!-- ============================================================ -->
+  <section id="contact" class="relative py-24 md:py-32 px-6 overflow-hidden">
+    <!-- Decorative -->
+    <div class="geo-shape absolute top-16 left-8 w-12 h-12 bg-sunny rounded-full" data-parallax="0.05"></div>
+    <div class="geo-shape absolute bottom-20 right-12 w-28 h-28 border-4 border-punch/20 rotate-12 rounded-lg" data-parallax="0.04"></div>
+
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="reveal">
+        <p class="font-mono text-punch text-sm tracking-widest uppercase mb-4">Contact</p>
+        <h2 class="text-4xl md:text-6xl font-bold mb-16" style="letter-spacing: -0.03em;">Let's connect.</h2>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-4 reveal">
+        <!-- Email -->
+        <a href="mailto:contact@dmrschmidt.de" class="social-pill email">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          Email
+        </a>
+        <!-- Twitter -->
+        <a href="https://www.twitter.com/dmrschmidt" target="_blank" rel="noopener" class="social-pill twitter">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.46 6c-.85.38-1.78.64-2.73.76 1-.6 1.76-1.54 2.12-2.67-.93.55-1.96.95-3.06 1.17A4.81 4.81 0 0015.11 4c-2.65 0-4.79 2.15-4.79 4.8 0 .37.04.74.13 1.1C6.73 9.72 3.68 7.8 1.64 5.03c-.41.7-.65 1.52-.65 2.4 0 1.66.85 3.13 2.14 3.99a4.78 4.78 0 01-2.17-.6v.06c0 2.32 1.65 4.26 3.85 4.7a4.81 4.81 0 01-2.16.08c.61 1.9 2.38 3.29 4.47 3.33A9.64 9.64 0 010 21.54 13.58 13.58 0 007.55 23c9.06 0 14.01-7.5 14.01-14.01 0-.21 0-.43-.02-.64A10 10 0 0024 5.96a9.87 9.87 0 01-2.83.78c1.02-.61 1.8-1.58 2.17-2.73l.12-.01z"/></svg>
+          Twitter
+        </a>
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/metzeltiger" target="_blank" rel="noopener" class="social-pill instagram">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.97.25 2.43.41.61.24 1.05.52 1.51.98.46.46.74.9.98 1.51.16.46.36 1.26.41 2.43.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.97-.41 2.43-.24.61-.52 1.05-.98 1.51-.46.46-.9.74-1.51.98-.46.16-1.26.36-2.43.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.97-.25-2.43-.41a4.08 4.08 0 01-1.51-.98c-.46-.46-.74-.9-.98-1.51-.16-.46-.36-1.26-.41-2.43C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.97.41-2.43.24-.61.52-1.05.98-1.51.46-.46.9-.74 1.51-.98.46-.16 1.26-.36 2.43-.41C8.42 2.17 8.8 2.16 12 2.16zM12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63a5.87 5.87 0 00-2.13 1.38A5.87 5.87 0 00.63 4.14C.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.31.8.72 1.47 1.38 2.13a5.87 5.87 0 002.13 1.38c.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56a5.87 5.87 0 002.13-1.38 5.87 5.87 0 001.38-2.13c.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91a5.87 5.87 0 00-1.38-2.13A5.87 5.87 0 0019.86.63C19.1.33 18.22.13 16.95.07 15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 100 12.32 6.16 6.16 0 000-12.32zM12 16a4 4 0 110-8 4 4 0 010 8zm7.85-10.4a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/></svg>
+          Instagram
+        </a>
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/MTZTGR" target="_blank" rel="noopener" class="social-pill facebook">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07c0 6.02 4.39 11.02 10.13 11.93v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.95.93-1.95 1.89v2.26h3.33l-.53 3.49h-2.8v8.44C19.61 23.09 24 18.09 24 12.07z"/></svg>
+          Facebook
+        </a>
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/in/dmrschmidt/" target="_blank" rel="noopener" class="social-pill linkedin">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 110-4.13 2.06 2.06 0 010 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.21 0 22.23 0z"/></svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- FOOTER -->
+  <!-- ============================================================ -->
+  <footer class="py-10 px-6 border-t border-dark/10">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p class="font-mono text-sm text-dark/50">&copy; 2020&ndash;2026 Dennis Schmidt</p>
+      <a href="../imprint.html" class="font-mono text-sm text-dark/50 hover:text-punch transition-colors">Imprint</a>
+    </div>
+  </footer>
+
+  <!-- ============================================================ -->
+  <!-- SCRIPTS -->
+  <!-- ============================================================ -->
+  <script>
+  (function () {
+    'use strict';
+
+    // ---- MORPH CIRCLE ----
+    const morphCircle = document.getElementById('morphCircle');
+    const heroSection = document.getElementById('hero');
+
+    function updateMorph() {
+      const scrollY = window.scrollY;
+      const heroH = heroSection.offsetHeight;
+      const progress = Math.min(scrollY / heroH, 1);
+
+      // Morph: circle -> rounded square -> diamond
+      // border-radius: 50% -> 20% -> 50% (diamond via rotate)
+      // rotation: 0 -> 45deg
+      // scale: 1 -> 0.7
+      let br, rot, sc;
+      if (progress < 0.5) {
+        const p = progress / 0.5;
+        br = 50 - (30 * p);       // 50% -> 20%
+        rot = 0 + (25 * p);       // 0 -> 25deg
+        sc = 1 - (0.15 * p);      // 1 -> 0.85
+      } else {
+        const p = (progress - 0.5) / 0.5;
+        br = 20 + (30 * p);       // 20% -> 50%
+        rot = 25 + (20 * p);      // 25 -> 45deg
+        sc = 0.85 - (0.15 * p);   // 0.85 -> 0.7
+      }
+
+      morphCircle.style.borderRadius = br + '%';
+      morphCircle.style.transform = 'translate(-50%, -50%) rotate(' + rot + 'deg) scale(' + sc + ')';
+      morphCircle.style.opacity = 0.9 - (0.3 * progress);
+    }
+
+    // ---- PARALLAX ----
+    const parallaxEls = document.querySelectorAll('[data-parallax]');
+
+    function updateParallax() {
+      const scrollY = window.scrollY;
+      parallaxEls.forEach(function (el) {
+        const speed = parseFloat(el.getAttribute('data-parallax'));
+        const yOffset = -(scrollY * speed * 10);
+        el.style.transform = el.style.transform
+          ? el.style.transform.replace(/translateY\([^)]*\)/, 'translateY(' + yOffset + 'px)')
+          : 'translateY(' + yOffset + 'px)';
+        // Simpler: just set translateY
+        const base = el.style.cssText.includes('rotate') ? el.className : '';
+        el.style.transform = 'translateY(' + yOffset + 'px)';
+      });
+    }
+
+    // Combine scroll handlers
+    let ticking = false;
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(function () {
+          updateMorph();
+          updateParallax();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // ---- INTERSECTION OBSERVER: Reveal & Stagger ----
+    const revealObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(function (el) {
+      revealObserver.observe(el);
+    });
+
+    // Stagger observer
+    const staggerObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          // Calculate delay based on visible position
+          const cards = Array.from(document.querySelectorAll('.stagger-item:not(.filtered-out)'));
+          const idx = cards.indexOf(entry.target);
+          const delay = Math.min(idx * 80, 800);
+          entry.target.style.transitionDelay = delay + 'ms';
+          entry.target.classList.add('visible');
+          staggerObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.stagger-item').forEach(function (el) {
+      staggerObserver.observe(el);
+    });
+
+    // ---- CATEGORY FILTER ----
+    const pills = document.querySelectorAll('.cat-pill');
+    const cards = document.querySelectorAll('.project-card');
+
+    pills.forEach(function (pill) {
+      pill.addEventListener('click', function () {
+        const filter = this.getAttribute('data-filter');
+
+        // Update active pill
+        pills.forEach(function (p) { p.classList.remove('active'); });
+        this.classList.add('active');
+
+        // Filter cards
+        cards.forEach(function (card) {
+          const cat = card.getAttribute('data-category');
+          if (filter === 'all' || cat === filter) {
+            card.classList.remove('filtered-out');
+          } else {
+            card.classList.add('filtered-out');
+          }
+        });
+      });
+    });
+
+  })();
+  </script>
+
+</body>
+</html>
