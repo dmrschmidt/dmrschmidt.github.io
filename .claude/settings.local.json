@@ -17,7 +17,12 @@
       "Bash(sed -i '' 's|\\\\.\\\\./img/|img/|g' /Users/dmrschmidt/workspace/sites/dmrschmidt.github.io/index.html)",
       "Bash(sed -i '' 's|href=\"\"imprint.html\"\"|href=\"\"imprint.html\"\"|g' /Users/dmrschmidt/workspace/sites/dmrschmidt.github.io/index.html)",
       "WebFetch(domain:mtztgr.bandcamp.com)",
-      "WebFetch(domain:mtztgr.gr)"
+      "WebFetch(domain:mtztgr.gr)",
+      "Bash(curl -sL -o c4-c5.jpg \"https://f4.bcbits.com/img/a2243526809_10.jpg\")",
+      "Bash(curl -sL -o when-we-become-memories.jpg \"https://f4.bcbits.com/img/a0633094233_10.jpg\")",
+      "Bash(curl -sL -o scream-like-this-ep.jpg \"https://f4.bcbits.com/img/a3982816872_10.jpg\")",
+      "Bash(curl -sL -o let-them-eat-cake.jpg \"https://f4.bcbits.com/img/a3140378415_10.jpg\")",
+      "Bash(curl -sL -o no-catharsis.jpg \"https://f4.bcbits.com/img/a3422114345_10.jpg\")"
     ]
   }
 }
