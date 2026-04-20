@@ -22,7 +22,16 @@
       "Bash(curl -sL -o when-we-become-memories.jpg \"https://f4.bcbits.com/img/a0633094233_10.jpg\")",
       "Bash(curl -sL -o scream-like-this-ep.jpg \"https://f4.bcbits.com/img/a3982816872_10.jpg\")",
       "Bash(curl -sL -o let-them-eat-cake.jpg \"https://f4.bcbits.com/img/a3140378415_10.jpg\")",
-      "Bash(curl -sL -o no-catharsis.jpg \"https://f4.bcbits.com/img/a3422114345_10.jpg\")"
+      "Bash(curl -sL -o no-catharsis.jpg \"https://f4.bcbits.com/img/a3422114345_10.jpg\")",
+      "WebFetch(domain:snekris.com)",
+      "WebFetch(domain:overmaze.dmrschmidt.de)",
+      "Read(//private/tmp/**)",
+      "Bash(curl -s -o snekris-ios.png \"https://snekris.com/content/image/htti1wamlqmrkjrrqtmu.png\")",
+      "Bash(curl -s -o snekris-playdate.png \"https://snekris.com/images/playdate.png\")",
+      "Bash(curl -s -o overmaze-levels.jpg \"https://overmaze.dmrschmidt.de/assets/img/levels.jpg\")",
+      "Bash(cp /tmp/snekris-ios.png /Users/dmrschmidt/Documents/workspace/pages/dmrschmidt.github.io/img/projects/snekris-ios.png)",
+      "Bash(cp /tmp/snekris-playdate.png /Users/dmrschmidt/Documents/workspace/pages/dmrschmidt.github.io/img/projects/snekris-playdate.png)",
+      "Bash(cp /tmp/overmaze-levels.jpg /Users/dmrschmidt/Documents/workspace/pages/dmrschmidt.github.io/img/projects/overmaze.jpg)"
     ]
   }
 }
