@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Datenschutz / Privacy — Dennis Schmidt</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            neon: { green: '#00ff88', pink: '#ff00aa', cyan: '#00ccff' },
+            dark: { base: '#0a0a0a', deep: '#1a0a2e', card: '#0f0f1a', surface: '#141424' }
+          },
+          fontFamily: {
+            mono: ['JetBrains Mono', 'monospace'],
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      overflow-x: hidden;
+    }
+
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background-image:
+        linear-gradient(rgba(0, 255, 136, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 136, 0.035) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .glow-green {
+      color: #00ff88;
+      text-shadow: 0 0 7px #00ff8866, 0 0 20px #00ff8833;
+    }
+
+    .lang-btn {
+      transition: all 0.25s;
+      cursor: pointer;
+      border: 1px solid #2a2a4a;
+      background: transparent;
+    }
+    .lang-btn:hover, .lang-btn.active {
+      border-color: #00ccff88;
+      color: #00ccff;
+      box-shadow: 0 0 10px #00ccff22;
+      background: #00ccff0a;
+    }
+
+    .legal-section h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: #00ff88;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    .legal-section h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+      color: #00ccff;
+      margin-top: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .legal-section p {
+      color: #b0b0b0;
+      font-size: 0.9375rem;
+      line-height: 1.7;
+      margin-bottom: 0.75rem;
+    }
+    .legal-section ul {
+      color: #b0b0b0;
+      font-size: 0.9375rem;
+      line-height: 1.7;
+      margin-bottom: 0.75rem;
+      padding-left: 1.5rem;
+      list-style: disc;
+    }
+    .legal-section li { margin-bottom: 0.25rem; }
+    .legal-section a {
+      color: #00ccff;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      word-break: break-word;
+    }
+    .legal-section a:hover {
+      color: #00ff88;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0a0a; }
+    ::-webkit-scrollbar-thumb { background: #1a1a3a; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #00ff8844; }
+  </style>
+</head>
+
+<body class="relative">
+  <div class="grid-overlay"></div>
+
+  <main class="relative z-10 min-h-screen">
+
+    <!-- Nav bar -->
+    <nav class="sticky top-0 z-50 backdrop-blur-md bg-dark-base/80 border-b border-gray-800/50">
+      <div class="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
+        <a href="./" class="font-mono text-sm text-gray-400 hover:text-neon-green transition-colors">
+          &larr; Back
+        </a>
+        <div class="flex gap-2">
+          <button class="lang-btn active px-3 py-1 rounded font-mono text-xs text-gray-400" data-lang="de" onclick="switchLang('de')">DE</button>
+          <button class="lang-btn px-3 py-1 rounded font-mono text-xs text-gray-400" data-lang="en" onclick="switchLang('en')">EN</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 py-12 md:py-20">
+
+      <p class="font-mono text-neon-green text-sm mb-8">
+        <span class="text-gray-500">$</span> cat ~/legal/privacy.md
+      </p>
+
+      <!-- ==================== GERMAN VERSION ==================== -->
+      <div id="lang-de" class="legal-section">
+
+        <h1 class="font-mono text-2xl md:text-3xl font-bold text-white mb-8">Datenschutzerkl&auml;rung</h1>
+
+        <p>
+          Diese Datenschutzerkl&auml;rung gilt f&uuml;r die unter <strong>dmrschmidt.de</strong> (sowie
+          <strong>dmrschmidt.github.io</strong>) erreichbare Website. F&uuml;r einzelne Projekt-Unterseiten und
+          Apps k&ouml;nnen erg&auml;nzende Datenschutzhinweise gelten; diese sind dort jeweils verlinkt.
+        </p>
+
+        <h2>Verantwortlicher</h2>
+        <p>
+          Dennis Schmidt<br>
+          Maybachufer 40<br>
+          12047 Berlin<br>
+          Deutschland<br>
+          E-Mail: <span class="email-obfuscated" data-user="contact" data-domain="dmrschmidt.de"></span>
+        </p>
+
+        <h2>Hosting (GitHub Pages)</h2>
+        <p>
+          Die Website wird auf GitHub Pages bereitgestellt, einem Dienst der GitHub, Inc., 88 Colin P Kelly Jr St,
+          San Francisco, CA 94107, USA. Beim Aufruf der Seiten werden technisch erforderliche Verbindungsdaten
+          (z.&nbsp;B. IP-Adresse, Datum und Uhrzeit der Anfrage, angefragte URL, Browser-Kennung,
+          Betriebssystem, Referrer) durch GitHub verarbeitet. Wir selbst betreiben keine eigenen Server-Logs.
+        </p>
+        <p>
+          Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO (berechtigtes Interesse an der zuverl&auml;ssigen
+          und sicheren Bereitstellung der Website). Eine &Uuml;bermittlung in die USA ist m&ouml;glich; GitHub st&uuml;tzt
+          Daten&uuml;bermittlungen u.&nbsp;a. auf Standardvertragsklauseln. Weitere Informationen:
+          <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">GitHub Privacy Statement</a>.
+        </p>
+
+        <h2>Externe Dienste</h2>
+        <p>
+          Zur Darstellung der Seiten werden Inhalte von Dritten geladen. Beim Laden &uuml;bermittelt Ihr Browser
+          technisch bedingt Ihre IP-Adresse an den jeweiligen Anbieter. Rechtsgrundlage ist jeweils
+          Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO (berechtigtes Interesse an einer ansprechenden, performanten
+          Darstellung).
+        </p>
+
+        <h3>Google Fonts</h3>
+        <p>
+          Schriftarten werden &uuml;ber Google Fonts der Google Ireland Limited, Gordon House, Barrow Street,
+          Dublin&nbsp;4, Irland geladen (<code>fonts.googleapis.com</code>, <code>fonts.gstatic.com</code>).
+          Eine &Uuml;bermittlung in die USA durch die Google LLC ist nicht ausgeschlossen.
+          Datenschutzhinweise: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">policies.google.com/privacy</a>.
+        </p>
+
+        <h3>Tailwind CSS (CDN)</h3>
+        <p>
+          F&uuml;r das Layout wird Tailwind CSS &uuml;ber <code>cdn.tailwindcss.com</code> geladen, betrieben von
+          Tailwind Labs, Inc. Datenschutzhinweise:
+          <a href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer">tailwindcss.com</a>.
+        </p>
+
+        <h3>Font Awesome (nur Unterseite /smokefree/)</h3>
+        <p>
+          Auf der Unterseite <code>/smokefree/privacy</code> werden Icon-Schriften &uuml;ber Font Awesome geladen,
+          betrieben von Fonticons, Inc., 6 Porter Road, Apartment 3R, Cambridge, MA&nbsp;02140, USA
+          (<code>use.fontawesome.com</code>). Datenschutzhinweise:
+          <a href="https://fontawesome.com/privacy" target="_blank" rel="noopener noreferrer">fontawesome.com/privacy</a>.
+        </p>
+
+        <h2>Cookies, Tracking, Analyse</h2>
+        <p>
+          Diese Website setzt keine eigenen Cookies, verwendet kein Webanalyse-Werkzeug und betreibt
+          kein Nutzer-Tracking.
+        </p>
+
+        <h2>Verlinkte externe Inhalte</h2>
+        <p>
+          Auf der Startseite finden sich Links zu externen Plattformen (u.&nbsp;a. Bandcamp, SoundCloud, Spotify,
+          500px, Twitter/X, Instagram, Facebook, LinkedIn, GitHub). Diese Links werden erst nach Ihrem Klick
+          aufgerufen; eine Daten&uuml;bermittlung an die jeweiligen Anbieter findet vor dem Klick nicht statt.
+          F&uuml;r die Datenverarbeitung auf den verlinkten Seiten sind die jeweiligen Anbieter verantwortlich.
+        </p>
+
+        <h2>Kontaktaufnahme per E-Mail</h2>
+        <p>
+          Wenn Sie uns per E-Mail kontaktieren, werden Ihre Angaben zur Bearbeitung der Anfrage und f&uuml;r
+          den Fall von Anschlussfragen gespeichert. Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b
+          bzw. lit.&nbsp;f DSGVO. Eine Weitergabe an Dritte erfolgt nicht.
+        </p>
+
+        <h2>Ihre Rechte</h2>
+        <p>Sie haben gegen&uuml;ber uns folgende Rechte hinsichtlich der Sie betreffenden personenbezogenen Daten:</p>
+        <ul>
+          <li>Recht auf Auskunft (Art.&nbsp;15 DSGVO)</li>
+          <li>Recht auf Berichtigung (Art.&nbsp;16 DSGVO)</li>
+          <li>Recht auf L&ouml;schung (Art.&nbsp;17 DSGVO)</li>
+          <li>Recht auf Einschr&auml;nkung der Verarbeitung (Art.&nbsp;18 DSGVO)</li>
+          <li>Recht auf Daten&uuml;bertragbarkeit (Art.&nbsp;20 DSGVO)</li>
+          <li>Recht auf Widerspruch gegen die Verarbeitung (Art.&nbsp;21 DSGVO)</li>
+        </ul>
+        <p>
+          Sie haben zudem das Recht, sich bei einer Datenschutz-Aufsichtsbeh&ouml;rde zu beschweren. Zust&auml;ndig
+          ist die Berliner Beauftragte f&uuml;r Datenschutz und Informationsfreiheit:
+          <a href="https://www.datenschutz-berlin.de" target="_blank" rel="noopener noreferrer">datenschutz-berlin.de</a>.
+        </p>
+
+        <h2>&Auml;nderungen dieser Erkl&auml;rung</h2>
+        <p>
+          Diese Datenschutzerkl&auml;rung kann angepasst werden, wenn sich die zugrunde liegenden Dienste oder
+          die Rechtslage &auml;ndern. Die jeweils aktuelle Fassung ist unter dieser URL abrufbar.
+        </p>
+      </div>
+
+      <!-- ==================== ENGLISH VERSION ==================== -->
+      <div id="lang-en" class="legal-section" style="display: none;">
+
+        <h1 class="font-mono text-2xl md:text-3xl font-bold text-white mb-8">Privacy Policy</h1>
+
+        <p>
+          This privacy policy applies to the website at <strong>dmrschmidt.de</strong> (and
+          <strong>dmrschmidt.github.io</strong>). Individual project subpages and apps may have additional
+          privacy notices; those are linked from the respective subpage.
+        </p>
+
+        <h2>Controller</h2>
+        <p>
+          Dennis Schmidt<br>
+          Maybachufer 40<br>
+          12047 Berlin<br>
+          Germany<br>
+          Email: <span class="email-obfuscated" data-user="contact" data-domain="dmrschmidt.de"></span>
+        </p>
+
+        <h2>Hosting (GitHub Pages)</h2>
+        <p>
+          The website is hosted on GitHub Pages, a service of GitHub, Inc., 88 Colin P Kelly Jr St,
+          San Francisco, CA 94107, USA. When you load a page, technical connection data (e.g. IP address,
+          date and time of the request, requested URL, browser identifier, operating system, referrer)
+          is processed by GitHub. We do not run our own server logs.
+        </p>
+        <p>
+          The legal basis is Art.&nbsp;6(1)(f) GDPR (legitimate interest in reliable and secure provision of
+          the website). Transfers to the USA are possible; GitHub relies, among other safeguards, on Standard
+          Contractual Clauses. For details, see
+          <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">GitHub's Privacy Statement</a>.
+        </p>
+
+        <h2>Third-party services</h2>
+        <p>
+          Some assets are loaded from third parties. When loading these, your browser technically transmits
+          your IP address to the respective provider. The legal basis in each case is Art.&nbsp;6(1)(f) GDPR
+          (legitimate interest in an attractive, performant presentation of the site).
+        </p>
+
+        <h3>Google Fonts</h3>
+        <p>
+          Fonts are loaded via Google Fonts, operated by Google Ireland Limited, Gordon House, Barrow Street,
+          Dublin&nbsp;4, Ireland (<code>fonts.googleapis.com</code>, <code>fonts.gstatic.com</code>). Transfers
+          to the USA via Google LLC cannot be ruled out. Privacy information:
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">policies.google.com/privacy</a>.
+        </p>
+
+        <h3>Tailwind CSS (CDN)</h3>
+        <p>
+          The site uses Tailwind CSS via <code>cdn.tailwindcss.com</code>, operated by Tailwind Labs, Inc.
+          More information:
+          <a href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer">tailwindcss.com</a>.
+        </p>
+
+        <h3>Font Awesome (subpage /smokefree/ only)</h3>
+        <p>
+          The subpage <code>/smokefree/privacy</code> loads icon fonts from Font Awesome, operated by
+          Fonticons, Inc., 6 Porter Road, Apartment 3R, Cambridge, MA&nbsp;02140, USA
+          (<code>use.fontawesome.com</code>). Privacy information:
+          <a href="https://fontawesome.com/privacy" target="_blank" rel="noopener noreferrer">fontawesome.com/privacy</a>.
+        </p>
+
+        <h2>Cookies, tracking, analytics</h2>
+        <p>
+          This website does not set its own cookies, does not use any web analytics tool, and does not
+          perform user tracking.
+        </p>
+
+        <h2>Linked external content</h2>
+        <p>
+          The home page links to external platforms (including Bandcamp, SoundCloud, Spotify, 500px,
+          Twitter/X, Instagram, Facebook, LinkedIn, GitHub). These links are only opened when you click them;
+          no data is transmitted to those providers before that. The respective providers are responsible
+          for any data processing on the linked sites.
+        </p>
+
+        <h2>Contact by email</h2>
+        <p>
+          If you contact us by email, your information is stored to handle the request and any follow-up
+          questions. The legal basis is Art.&nbsp;6(1)(b) or (f) GDPR. Your data is not shared with third parties.
+        </p>
+
+        <h2>Your rights</h2>
+        <p>You have the following rights with respect to your personal data:</p>
+        <ul>
+          <li>Right of access (Art.&nbsp;15 GDPR)</li>
+          <li>Right to rectification (Art.&nbsp;16 GDPR)</li>
+          <li>Right to erasure (Art.&nbsp;17 GDPR)</li>
+          <li>Right to restriction of processing (Art.&nbsp;18 GDPR)</li>
+          <li>Right to data portability (Art.&nbsp;20 GDPR)</li>
+          <li>Right to object to processing (Art.&nbsp;21 GDPR)</li>
+        </ul>
+        <p>
+          You also have the right to lodge a complaint with a data protection supervisory authority. The
+          competent authority is the Berlin Commissioner for Data Protection and Freedom of Information:
+          <a href="https://www.datenschutz-berlin.de" target="_blank" rel="noopener noreferrer">datenschutz-berlin.de</a>.
+        </p>
+
+        <h2>Changes to this policy</h2>
+        <p>
+          This policy may be updated when the underlying services or the legal situation change. The
+          current version is always available at this URL.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="relative py-10 px-4 border-t border-gray-800/50">
+      <div class="max-w-3xl mx-auto text-center">
+        <p class="font-mono text-xs text-gray-600">
+          &copy; 2020&ndash;2026 Dennis Schmidt &nbsp;|&nbsp;
+          <a href="imprint.html" class="text-gray-500 hover:text-neon-green transition-colors">Imprint</a>
+        </p>
+      </div>
+    </footer>
+
+  </main>
+
+  <script>
+    document.querySelectorAll('.email-obfuscated').forEach(el => {
+      const u = el.dataset.user;
+      const d = el.dataset.domain;
+      const addr = u + '@' + d;
+      const a = document.createElement('a');
+      a.href = 'mail' + 'to:' + addr;
+      a.textContent = addr;
+      el.appendChild(a);
+    });
+
+    function switchLang(lang) {
+      document.getElementById('lang-de').style.display = lang === 'de' ? 'block' : 'none';
+      document.getElementById('lang-en').style.display = lang === 'en' ? 'block' : 'none';
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+      document.documentElement.lang = lang;
+    }
+  </script>
+
+</body>
+</html>
