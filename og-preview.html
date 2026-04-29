@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OG · Dennis Schmidt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1200px;
+    height: 630px;
+    background: #0a0a0f;
+    color: #f5f0e8;
+    font-family: "Bricolage Grotesque", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+  .canvas {
+    position: relative;
+    width: 1200px;
+    height: 630px;
+    padding: 48px 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+
+  /* gradient blobs */
+  .blob { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; }
+  .blob-1 { width: 520px; height: 520px; background: #d4ff3d; opacity: 0.22; top: -200px; right: -120px; }
+  .blob-2 { width: 420px; height: 420px; background: #ff5b3d; opacity: 0.16; bottom: -150px; left: -100px; }
+  .blob-3 { width: 340px; height: 340px; background: #7c5fff; opacity: 0.18; top: 38%; left: 36%; }
+
+  /* film grain */
+  .grain {
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    mix-blend-mode: overlay;
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .row {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .mark {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.04em;
+  }
+  .dot {
+    width: 12px; height: 12px;
+    background: #d4ff3d;
+    border-radius: 50%;
+    box-shadow: 0 0 22px #d4ff3d;
+  }
+
+  .meta {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    color: #8a8590;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+  }
+
+  .title-block {
+    position: relative;
+    z-index: 2;
+  }
+  .eyebrow {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    color: #8a8590;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 32px; height: 1px;
+    background: #d4ff3d;
+  }
+  .title {
+    font-weight: 500;
+    font-size: 112px;
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+    font-variation-settings: "opsz" 96;
+  }
+  .title em {
+    font-family: "Instrument Serif", serif;
+    font-style: italic;
+    font-weight: 400;
+    color: #d4ff3d;
+    letter-spacing: -0.02em;
+  }
+  .gw {
+    background: linear-gradient(135deg, #ff5b3d, #ff2d8a, #7c5fff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .tags {
+    display: flex;
+    gap: 8px;
+  }
+  .tag {
+    padding: 9px 16px;
+    border: 1px solid rgba(245,240,232,0.1);
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 500;
+    background: rgba(245,240,232,0.04);
+  }
+  .tag.accent {
+    background: #d4ff3d;
+    color: #0a0a0f;
+    border-color: #d4ff3d;
+    font-weight: 600;
+  }
+
+  .url {
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-weight: 500;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .url::before {
+    content: "";
+    width: 26px; height: 1px;
+    background: #d4ff3d;
+  }
+  .url em {
+    font-family: "Instrument Serif", serif;
+    font-style: italic;
+    font-weight: 400;
+    color: #d4ff3d;
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="grain"></div>
+
+    <div class="row">
+      <div class="mark"><span class="dot"></span>Dennis Schmidt</div>
+      <div class="meta">BERLIN ↔ WORLDWIDE · EST. MCMLXXXV</div>
+    </div>
+
+    <div class="title-block">
+      <div class="eyebrow">Maker · Builder · Producer</div>
+      <h1 class="title">
+        Code, <span class="gw">sound</span> &amp; <em>image</em>,<br>
+        shipped&nbsp;daily.
+      </h1>
+    </div>
+
+    <div class="row">
+      <div class="tags">
+        <span class="tag accent">Founder</span>
+        <span class="tag">MTZTGR — techno</span>
+        <span class="tag">Photographer</span>
+        <span class="tag">Engineering Manager</span>
+      </div>
+      <div class="url">→ <em>dmrschmidt.de</em></div>
+    </div>
+  </div>
+</body>
+</html>
