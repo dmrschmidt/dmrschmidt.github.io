@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Logo source — Dennis Schmidt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1024px;
+    height: 1024px;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  .icon {
+    width: 1024px;
+    height: 1024px;
+    background: #0a0a0f;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* soft inner glow */
+  .icon::before {
+    content: "";
+    position: absolute;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: #d4ff3d;
+    opacity: 0.10;
+    filter: blur(120px);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  /* film-grain to match site personality */
+  .icon::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.10 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    mix-blend-mode: overlay;
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  .d {
+    font-family: "Instrument Serif", serif;
+    font-style: italic;
+    font-weight: 400;
+    /* slightly more refined proportions for a logo asset */
+    font-size: 1080px;
+    line-height: 1;
+    color: #f5f0e8;
+    position: relative;
+    z-index: 1;
+    transform: translate(-60px, 40px);
+  }
+
+  .dot {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: #d4ff3d;
+    bottom: 200px;
+    right: 170px;
+    box-shadow: 0 0 100px rgba(212, 255, 61, 0.6);
+    z-index: 2;
+  }
+</style>
+</head>
+<body>
+  <div class="icon">
+    <span class="d">d</span>
+    <span class="dot"></span>
+  </div>
+</body>
+</html>
