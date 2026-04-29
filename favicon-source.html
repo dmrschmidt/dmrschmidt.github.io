@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Favicon source — Dennis Schmidt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1024px;
+    height: 1024px;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  /* ───────────────────────────────
+     Each .icon block renders one
+     1024×1024 favicon design. Only
+     the FIRST is captured by Chrome
+     headless when --window-size
+     matches; others are for visual
+     reference if you open the file.
+     ─────────────────────────────── */
+
+  .icon {
+    width: 1024px;
+    height: 1024px;
+    background: #0a0a0f;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* subtle inner glow */
+  .icon::before {
+    content: "";
+    position: absolute;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: #d4ff3d;
+    opacity: 0.10;
+    filter: blur(120px);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .d {
+    font-family: "Instrument Serif", serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1280px;
+    line-height: 1;
+    color: #f5f0e8;
+    position: relative;
+    z-index: 1;
+    /* nudge to optically center the italic, account for ascender */
+    transform: translate(-90px, 60px);
+  }
+
+  .dot {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: #d4ff3d;
+    bottom: 130px;
+    right: 100px;
+    box-shadow: 0 0 100px rgba(212, 255, 61, 0.6);
+    z-index: 2;
+  }
+</style>
+</head>
+<body>
+  <div class="icon">
+    <span class="d">d</span>
+    <span class="dot"></span>
+  </div>
+</body>
+</html>
