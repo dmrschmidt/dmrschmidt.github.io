@@ -31,7 +31,9 @@
       "Bash(curl -s -o overmaze-levels.jpg \"https://overmaze.dmrschmidt.de/assets/img/levels.jpg\")",
       "Bash(cp /tmp/snekris-ios.png /Users/dmrschmidt/Documents/workspace/pages/dmrschmidt.github.io/img/projects/snekris-ios.png)",
       "Bash(cp /tmp/snekris-playdate.png /Users/dmrschmidt/Documents/workspace/pages/dmrschmidt.github.io/img/projects/snekris-playdate.png)",
-      "Bash(cp /tmp/overmaze-levels.jpg /Users/dmrschmidt/Documents/workspace/pages/dmrschmidt.github.io/img/projects/overmaze.jpg)"
+      "Bash(cp /tmp/overmaze-levels.jpg /Users/dmrschmidt/Documents/workspace/pages/dmrschmidt.github.io/img/projects/overmaze.jpg)",
+      "Bash(curl -sL https://video-stabilizer.dmrschmidt.de)",
+      "Bash(curl -sL -o /Users/dmrschmidt/workspace/sites/dmrschmidt.github.io/img/projects/stabilize.jpg https://video-stabilizer.dmrschmidt.de/og-preview.jpg)"
     ]
   }
 }
