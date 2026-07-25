@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Director of Happiness — Careers — Dennis Schmidt</title>
+<meta name="description" content="Open position: Director of Happiness. Hybrid (Berlin). Permanent, flexible. Executive Office. Reports to CEO.">
+<meta property="og:title" content="Director of Happiness — Careers">
+<meta property="og:description" content="Hybrid (Berlin, with occasional travel). Permanent, flexible. Executive Office. Reports to CEO.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="../img/opengraph-preview.jpg">
+<meta property="og:url" content="https://dmrschmidt.de/careers/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@dmrschmidt">
+
+<link rel="icon" type="image/svg+xml" href="../img/favicon/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../img/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../img/favicon/favicon-16x16.png">
+<link rel="apple-touch-icon" href="../img/favicon/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #18181f;
+    --ink: #f5f0e8;
+    --ink-mute: #8a8590;
+    --line: rgba(245,240,232,0.08);
+    --lime: #d4ff3d;
+    --coral: #ff5b3d;
+    --violet: #7c5fff;
+    --cream: #f5f0e8;
+    --hot-pink: #ff2d8a;
+
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --serif: "Instrument Serif", serif;
+    --mono: "JetBrains Mono", monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--display);
+    color: var(--ink);
+    background: var(--bg);
+    font-size: 17px;
+    line-height: 1.5;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 200;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    mix-blend-mode: overlay;
+    opacity: 0.6;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  ::selection { background: var(--lime); color: var(--bg); }
+
+  /* atmospheric blobs */
+  .blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .blob-1 {
+    width: 600px; height: 600px;
+    background: var(--lime);
+    opacity: 0.08;
+    top: -200px; right: -150px;
+  }
+  .blob-2 {
+    width: 500px; height: 500px;
+    background: var(--hot-pink);
+    opacity: 0.05;
+    bottom: -100px; left: -120px;
+  }
+
+  /* ─── nav ─── */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 18px clamp(16px, 3vw, 40px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    background: rgba(10,10,15,0.7);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 14px;
+    transition: gap 0.3s, color 0.3s;
+  }
+  .nav-back:hover {
+    color: var(--lime);
+    gap: 14px;
+  }
+  .nav-back .arrow {
+    width: 18px; height: 18px;
+    transition: transform 0.3s;
+  }
+  .nav-back:hover .arrow { transform: translateX(-3px); }
+
+  .nav-mark {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: -0.04em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .nav-mark .dot {
+    width: 8px; height: 8px;
+    background: var(--lime);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--lime);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.7; }
+  }
+
+  .nav-status {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    padding: 6px 14px;
+    white-space: nowrap;
+  }
+  .nav-status b { color: var(--lime); font-weight: 500; }
+
+  /* ─── content ─── */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: clamp(56px, 10vh, 100px) clamp(20px, 4vw, 60px) 0;
+  }
+
+  .head-eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .head-eyebrow::before {
+    content: "";
+    width: 32px; height: 1px;
+    background: var(--lime);
+  }
+
+  h1.job-title {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: clamp(44px, 7.5vw, 88px);
+    line-height: 0.94;
+    letter-spacing: -0.04em;
+    font-variation-settings: "opsz" 96;
+    margin-bottom: clamp(32px, 5vh, 48px);
+  }
+  h1.job-title em {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--lime);
+  }
+
+  /* ─── meta table ─── */
+  .job-meta {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: rgba(245,240,232,0.02);
+    overflow: hidden;
+    margin-bottom: clamp(40px, 6vh, 64px);
+  }
+  .job-meta dl {
+    display: grid;
+    grid-template-columns: minmax(150px, 200px) 1fr;
+  }
+  .job-meta dt,
+  .job-meta dd {
+    padding: 16px clamp(18px, 3vw, 28px);
+    border-bottom: 1px solid var(--line);
+  }
+  .job-meta dt {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    display: flex;
+    align-items: center;
+  }
+  .job-meta dd {
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .job-meta dt:nth-last-of-type(1),
+  .job-meta dd:nth-last-of-type(1) { border-bottom: none; }
+
+  /* ─── sections ─── */
+  .job-section { margin-bottom: clamp(40px, 6vh, 64px); }
+
+  .job-section > h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(22px, 2.6vw, 30px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    font-variation-settings: "opsz" 28;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+
+  .job-section h3 {
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--coral);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+
+  .job-section p {
+    color: var(--ink-mute);
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 14px;
+    max-width: 66ch;
+  }
+  .job-section p:last-child { margin-bottom: 0; }
+  .job-section p strong { color: var(--ink); font-weight: 600; }
+  .job-section p em {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.1em;
+    color: var(--ink);
+  }
+
+  .job-section ul {
+    list-style: none;
+    max-width: 66ch;
+  }
+  .job-section ul li {
+    position: relative;
+    padding-left: 26px;
+    color: var(--ink-mute);
+    font-size: 16px;
+    line-height: 1.65;
+    margin-bottom: 11px;
+  }
+  .job-section ul li:last-child { margin-bottom: 0; }
+  .job-section ul li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.72em;
+    width: 10px;
+    height: 1px;
+    background: var(--lime);
+    opacity: 0.55;
+  }
+
+  /* values list — subtle accent variant */
+  .job-section.values ul li::before { background: var(--violet); opacity: 0.7; }
+  .job-section.benefits ul li::before { background: var(--coral); opacity: 0.6; }
+
+  /* ─── apply ─── */
+  .apply {
+    margin-top: 22px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 26px;
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    background: rgba(245,240,232,0.03);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+    transition: background 0.3s, border-color 0.3s, color 0.3s, gap 0.3s;
+  }
+  .apply:hover {
+    background: var(--lime);
+    border-color: var(--lime);
+    color: var(--bg);
+    gap: 16px;
+  }
+  .apply svg { width: 15px; height: 15px; }
+
+  /* ─── footer ─── */
+  footer {
+    position: relative;
+    z-index: 1;
+    margin-top: clamp(60px, 10vh, 100px);
+    padding: 30px clamp(20px, 4vw, 60px);
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  footer a { transition: color 0.3s; }
+  footer a:hover { color: var(--lime); }
+  footer .foot-sep { opacity: 0.4; }
+
+  /* reveal on load */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s cubic-bezier(.2,.85,.2,1) 0.1s forwards;
+  }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 560px) {
+    .nav-status { display: none; }
+    .job-meta dl { grid-template-columns: 1fr; }
+    .job-meta dt { padding-bottom: 0; border-bottom: none; }
+    .job-meta dd { padding-top: 6px; }
+  }
+</style>
+</head>
+
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <nav class="nav">
+    <a href="../" class="nav-back">
+      <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M5 12L12 19M5 12L12 5"/></svg>
+      Back
+    </a>
+    <a href="../" class="nav-mark">
+      <span class="dot"></span>
+      Dennis Schmidt
+    </a>
+    <div class="nav-status"><b>1</b> open position</div>
+  </nav>
+
+  <main>
+    <article class="reveal">
+      <div class="head-eyebrow">— Careers / Open position</div>
+      <h1 class="job-title">Director of <em>Happiness.</em></h1>
+
+      <div class="job-meta">
+        <dl>
+          <dt>Location</dt>
+          <dd>Hybrid (Berlin, with occasional travel)</dd>
+          <dt>Employment Type</dt>
+          <dd>Permanent, Flexible</dd>
+          <dt>Department</dt>
+          <dd>Executive Office</dd>
+          <dt>Reports to</dt>
+          <dd>CEO</dd>
+        </dl>
+      </div>
+
+      <section class="job-section">
+        <h2>About the role</h2>
+        <p>We're looking for a Director of Happiness to join our Executive Office.</p>
+        <p>The successful candidate will help maintain a healthy balance between ambitious projects and actually enjoying life. This is a highly collaborative role with significant autonomy and plenty of room to shape the position.</p>
+        <p>While this is a strategic role, <strong>hand-on</strong> execution is occasionally expected.</p>
+      </section>
+
+      <section class="job-section">
+        <h2>Responsibilities</h2>
+        <ul>
+          <li>Maintain and continuously improve overall happiness KPIs.</li>
+          <li>Challenge unnecessary overthinking with evidence-based interventions.</li>
+          <li>Encourage healthy work-life balance through spontaneous adventures, walks and occasional dancing.</li>
+          <li>Schedule regular quality time while respecting independent routines.</li>
+          <li>Provide honest feedback&mdash;even when it's not what the CEO wants to hear.</li>
+          <li>Celebrate small wins before moving on to the next project.</li>
+          <li>Occasionally remind the CEO to eat, rest or stop trying to optimize absolutely everything.</li>
+          <li>Support photography initiatives by tolerating brief, unavoidable waiting periods while "the light gets better."</li>
+          <li>Participate in selected culinary research and development activities.</li>
+          <li>Maintain a psychologically safe environment where difficult conversations can happen without unnecessary drama.</li>
+          <li>Be comfortable with occasional after-hours strategy sessions.</li>
+          <li>Demonstrate good judgement when deciding whether to escalate matters.</li>
+          <li>Ensure priorities remain aligned, even when things become... fluid.</li>
+          <li>Accept that some conversations may begin with, "I have a tiny thought..."</li>
+        </ul>
+      </section>
+
+      <section class="job-section">
+        <h2>Required qualifications</h2>
+        <ul>
+          <li>Demonstrated emotional intelligence.</li>
+          <li>Strong communication skills.</li>
+          <li>Comfortable setting boundaries.</li>
+          <li>Able to distinguish facts from stories the CEO occasionally invents in his own head.</li>
+          <li>Appreciation for curiosity, music and good food.</li>
+          <li>Independent life outside of work.</li>
+          <li>Comfortable with moderate levels of nerdiness.</li>
+        </ul>
+      </section>
+
+      <section class="job-section">
+        <h2>Nice to have</h2>
+        <ul>
+          <li>Festival experience.</li>
+          <li>Ability to appreciate both quiet evenings and slightly chaotic weekends.</li>
+          <li>Doesn't mind appearing in photos from time to time.</li>
+          <li>Enjoys discovering caf&eacute;s, restaurants or places without requiring a detailed spreadsheet first.</li>
+          <li>Basic cat fluency ("mauu") is considered an advantage.</li>
+        </ul>
+      </section>
+
+      <section class="job-section benefits">
+        <h2>Benefits</h2>
+        <ul>
+          <li>High degree of autonomy.</li>
+          <li>Flexible working model with no mandatory office days.</li>
+          <li>Freedom to pursue personal projects and interests.</li>
+          <li>Competitive snack budget.</li>
+          <li>Access to experimental dinners before they become edible.</li>
+          <li>Occasional airport pickup.</li>
+          <li>Professional photography available upon request.</li>
+          <li>Regular off-sites.</li>
+          <li>Performance reviews are generally conducted face-to-face.</li>
+          <li>Strong commitment to continuous improvement (sometimes perhaps a little <em>too</em> strong).</li>
+        </ul>
+      </section>
+
+      <section class="job-section">
+        <h2>Our Culture</h2>
+        <p>We believe the best partnerships are built on trust, independence and mutual curiosity.</p>
+        <p>We value honesty over perfection, communication over assumptions, and making memories over optimizing them.</p>
+        <p>You won't be expected to complete the CEO&mdash;you'll simply make an already good life even more enjoyable.</p>
+      </section>
+
+      <section class="job-section values">
+        <h2>Our Values</h2>
+        <ul>
+          <li>Curiosity over certainty.</li>
+          <li>Independence over ownership.</li>
+          <li>Chemistry over hierarchy.</li>
+          <li>Clear communication beats mind reading.</li>
+          <li>Enthusiastic participation is valued more than perfect execution.</li>
+          <li>Mutual consent is the foundation of every project.</li>
+        </ul>
+      </section>
+
+      <section class="job-section">
+        <h2>Application Process</h2>
+        <p>Interested candidates are encouraged to apply whenever it feels right.</p>
+        <p>There are no artificial deadlines.</p>
+        <p>Shortlisted candidates may be invited for an informal chemistry interview.</p>
+        <p>In fact, if you're reading this, there's a reasonable chance we've already been talking for a while.</p>
+        <p>References are welcome but not required. Mutual friends occasionally provide them anyway.</p>
+        <a class="apply" id="applyLink" href="#" data-user="contact" data-domain="dmrschmidt.de" data-subject="Application: Director of Happiness">
+          Apply for this position
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+        </a>
+      </section>
+
+      <section class="job-section">
+        <h2>FAQ</h2>
+
+        <h3>Is this a remote position?</h3>
+        <p>Partially.</p>
+
+        <h3>Is relocation required?</h3>
+        <p>No. Though being in the same city has historically improved collaboration.</p>
+
+        <h3>Is prior experience mandatory?</h3>
+        <p>Not necessarily. Genuine enthusiasm tends to outperform r&eacute;sum&eacute;s.</p>
+
+        <h3>Is there a probation period?</h3>
+        <p>No. We generally prefer discovering whether we enjoy working together naturally.</p>
+      </section>
+
+      <section class="job-section">
+        <h2>Equal Opportunity Statement</h2>
+        <p>We welcome applicants from all backgrounds.</p>
+        <p>Existing familiarity with the hiring manager may provide context but does not guarantee an offer.</p>
+        <p>The position may already be informally occupied. Applications are nevertheless always appreciated.</p>
+      </section>
+    </article>
+  </main>
+
+  <footer>
+    <span>© 2009 — 2026 Dennis Schmidt · Made in Berlin</span>
+    <span class="foot-sep">·</span>
+    <a href="../imprint.html">Imprint →</a>
+    <span class="foot-sep">·</span>
+    <a href="../privacy.html">Privacy →</a>
+  </footer>
+
+  <script>
+    // assemble obfuscated mailto
+    (function () {
+      const el = document.getElementById('applyLink');
+      if (!el) return;
+      const addr = el.dataset.user + '@' + el.dataset.domain;
+      el.href = 'mail' + 'to:' + addr + '?subject=' + encodeURIComponent(el.dataset.subject);
+    })();
+  </script>
+</body>
+</html>
