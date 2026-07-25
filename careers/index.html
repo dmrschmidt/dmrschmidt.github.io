@@ -275,6 +275,15 @@
     font-size: 1.1em;
     color: var(--ink);
   }
+  .job-section p a {
+    color: var(--lime);
+    border-bottom: 1px solid rgba(212,255,61,0.3);
+    transition: border-color 0.3s, color 0.3s;
+  }
+  .job-section p a:hover {
+    color: var(--cream);
+    border-bottom-color: var(--cream);
+  }
 
   .job-section ul {
     list-style: none;
@@ -498,7 +507,8 @@
         <p>Shortlisted candidates may be invited for an informal chemistry interview.</p>
         <p>In fact, if you're reading this, there's a reasonable chance we've already been talking for a while.</p>
         <p>References are welcome but not required. Mutual friends occasionally provide them anyway.</p>
-        <a class="apply" id="applyLink" href="#" data-user="contact" data-domain="dmrschmidt.de" data-subject="Application: Director of Happiness">
+        <p>Applications may be submitted to <span class="email-obfuscated" data-user="dmrschmidt+careers" data-domain="gmail.com"></span>.</p>
+        <a class="apply" id="applyLink" href="#" data-user="dmrschmidt+careers" data-domain="gmail.com" data-subject="Application: Director of Happiness">
           Apply for this position
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
         </a>
@@ -538,8 +548,18 @@
   </footer>
 
   <script>
-    // assemble obfuscated mailto
+    // assemble obfuscated emails
     (function () {
+      const subject = '?subject=' + encodeURIComponent('Application: Director of Happiness');
+
+      document.querySelectorAll('.email-obfuscated').forEach(el => {
+        const addr = el.dataset.user + '@' + el.dataset.domain;
+        const a = document.createElement('a');
+        a.href = 'mail' + 'to:' + addr + subject;
+        a.textContent = addr;
+        el.appendChild(a);
+      });
+
       const el = document.getElementById('applyLink');
       if (!el) return;
       const addr = el.dataset.user + '@' + el.dataset.domain;
