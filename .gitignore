@@ -1,3 +1,6 @@
 .idea
 *.icloud
 node_modules
+.DS_Store
+obituary/raw/
+obituary/musik.mp3

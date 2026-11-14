@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Abendandacht für sieben Töpfe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..800,0..100,0..1;1,9..144,300..800,0..100,0..1&display=swap" rel="stylesheet">
+<style>
+  :root { --nacht: #12231a; --wald: #1d382b; --kerze: #ffd27a; --glut: #ff9a3c; --hell: #f1ead6; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--nacht); color: var(--hell); font: 300 1.125rem/1.65 Fraunces, Georgia, serif; overflow-x: hidden; }
+  h1, h2 { font-weight: 700; font-variation-settings: "SOFT" 100, "WONK" 1; line-height: .95; margin: 0; letter-spacing: -.025em; }
+  a { color: inherit; }
+
+  /* Wackelaugen: weiße Scheibe, Pupille folgt dem Zeiger */
+  .augen { display: flex; gap: .08em; font-size: 2.6rem; }
+  .augen i { position: relative; width: 1em; height: 1em; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #e9e6dc); box-shadow: inset -.06em -.08em 0 #0002, 0 .05em .15em #0006; }
+  .augen i::after { content: ""; position: absolute; inset: 27%; border-radius: 50%; background: #111; transform: translate(var(--x, 0%), var(--y, 55%)); transition: transform var(--dauer, .12s) var(--kurve, ease-out); }
+
+  .anfang { min-height: 100svh; display: grid; align-content: center; gap: 2rem; padding: 3rem clamp(1.25rem, 7vw, 7rem); background: radial-gradient(70rem 45rem at 85% 115%, var(--wald), transparent); }
+  .anfang .augen { font-size: clamp(5rem, 17vw, 11rem); }
+  h1 { font-size: clamp(3.2rem, 12.5vw, 9.5rem); max-width: 8.5em; }
+  .anfang p { max-width: 31em; font-size: 1.3rem; margin: 0; }
+  .los { display: inline-block; font-weight: 600; color: var(--kerze); text-underline-offset: .25em; }
+
+  .pflanze { min-height: 92svh; display: grid; align-items: center; gap: clamp(1.5rem, 6vw, 6rem); padding: 3.5rem clamp(1.25rem, 7vw, 7rem); max-width: 82rem; margin: 0 auto; }
+  @media (min-width: 52rem) {
+    .pflanze { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }
+    .pflanze:nth-of-type(even) .altar { order: 2; }
+  }
+
+  .altar { display: grid; justify-items: center; gap: 1.25rem; }
+  .altar .nische { margin: 0; }
+  /* Nische: im Dunkeln nur Umriss und Augen, mit Kerze die ganze Pflanze */
+  .nische { position: relative; width: min(100%, 25rem); aspect-ratio: 3/4; margin: 0 auto; border-radius: 999px 999px 14px 14px; background: linear-gradient(#0c1812, #162a20); box-shadow: inset 0 0 0 1px #f1ead614, inset 0 2.5rem 4rem #000a; transition: box-shadow 1.2s; }
+  .nische::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(95% 75% at 74% 96%, #ffd27acc, #c9762a55 38%, transparent 72%); opacity: 0; transition: opacity 1.2s; }
+  .nische > img { position: absolute; left: 9%; bottom: 0; width: 82%; height: 88%; object-fit: contain; object-position: bottom; filter: brightness(.07) saturate(0); transition: filter 1.2s; }
+  .nische .augen { position: absolute; top: 40%; left: 50%; translate: -50% 0; transition: opacity .5s; }
+  .brennt .nische { box-shadow: inset 0 0 0 2px var(--kerze), 0 0 9rem -2rem var(--glut); }
+  .brennt .nische::before { opacity: 1; }
+  .brennt .nische > img { filter: drop-shadow(0 0 1.5rem #ffd27a44); }
+  .brennt .nische .augen { opacity: 0; }
+
+  .wachs { position: absolute; right: 13%; bottom: 3%; width: 1.15rem; height: 3.4rem; border-radius: 3px; background: linear-gradient(90deg, #cdbd94, #f6edd3 45%, #b9a87c); }
+  .wachs::before { content: ""; position: absolute; left: 50%; top: -.45rem; width: 2px; height: .5rem; margin-left: -1px; background: #222; }
+  .wachs::after { content: ""; position: absolute; left: 50%; bottom: calc(100% + .25rem); width: 1rem; height: 1.9rem; margin-left: -.5rem; border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%; background: radial-gradient(ellipse at 50% 78%, #fff 0 16%, var(--kerze) 42%, var(--glut) 70%, transparent 74%); transform-origin: 50% 100%; opacity: 0; scale: .2; transition: opacity .4s, scale .4s; }
+  .brennt .wachs::after { opacity: 1; scale: 1; animation: flackern 1.6s ease-in-out infinite; }
+  @keyframes flackern { 20% { transform: rotate(-3deg) scaleY(1.06); } 45% { transform: rotate(2deg) scaleY(.95); } 70% { transform: rotate(-1deg) scaleY(1.08); } }
+
+  h2 { font-size: clamp(2.7rem, 7vw, 5.6rem); overflow-wrap: anywhere; }
+  .satz { font-style: italic; font-size: 1.45rem; line-height: 1.35; color: var(--kerze); margin: 1rem 0 1.25rem; max-width: 20em; }
+  .text p { max-width: 30em; }
+  .foto { float: right; width: 8.5rem; aspect-ratio: 1; object-fit: cover; margin: .25rem 0 .75rem 1.25rem; border: solid #f6f1e4; border-width: .4rem .4rem 1.5rem; rotate: 3deg; box-shadow: 0 .5rem 1.2rem #0007; }
+  .pflanze:nth-of-type(even) .foto { rotate: -4deg; }
+  dl { clear: both; display: grid; grid-template-columns: auto 1fr; gap: .35rem 1.25rem; margin: 1.5rem 0 0; max-width: 30em; border-top: 1px solid #f1ead633; padding-top: 1.25rem; }
+  dt { font-weight: 600; }
+  dd { margin: 0; }
+
+  button { font: 600 1.05rem Fraunces, serif; color: var(--nacht); background: var(--kerze); border: 0; border-radius: 999px; padding: .75rem 1.5rem; cursor: pointer; }
+  button:hover { background: #ffe1a6; }
+  button:focus-visible, a:focus-visible { outline: 3px solid var(--hell); outline-offset: 4px; }
+  .brennt [data-kerze] { background: none; color: var(--kerze); cursor: default; }
+  #musik { position: fixed; right: 1rem; bottom: 1rem; z-index: 5; background: var(--hell); }
+
+  /* Kerzenleiste: eine pro Topf, zeigt den Stand und springt zur Station */
+  .leiste { position: fixed; left: 1rem; bottom: 1.15rem; z-index: 5; display: flex; gap: .55rem; padding: .6rem .8rem; border-radius: 999px; background: #0c1812cc; backdrop-filter: blur(6px); }
+  .leiste a { width: .7rem; height: 1.1rem; border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%; background: #f1ead633; transition: background .6s, box-shadow .6s; }
+  .leiste a.an { background: var(--kerze); box-shadow: 0 0 .8rem var(--glut); }
+
+  .ende { min-height: 90svh; display: grid; place-content: center; justify-items: center; text-align: center; padding: 4rem 1.25rem; }
+  .ende h2 { font-size: clamp(2.3rem, 7vw, 5rem); max-width: 12em; }
+  .ende p { max-width: 30em; margin: 1.5rem auto 0; }
+  .ende figure { margin: 3rem auto 0; max-width: 36rem; font-style: italic; color: #f1ead6aa; }
+  .ende img { display: block; width: 100%; border-radius: 10px; margin-bottom: .75rem; filter: saturate(.3) brightness(.6); transition: filter 2s; }
+  .hell .ende img { filter: none; }
+  .geschenk { width: min(100%, 46rem); margin: 3rem auto 0; padding: 2rem clamp(1rem, 4vw, 3rem) 2.5rem; border: 2px dashed #f1ead644; border-radius: 2rem; transition: background 1.2s, color 1.2s, box-shadow 1.2s; }
+  .geschenk h2 { font-size: clamp(1.9rem, 5vw, 3.2rem); margin: 0 auto; }
+  .geschenk p { margin-top: 1rem; }
+  .faecher { display: flex; flex-wrap: wrap; justify-content: center; gap: .25rem; margin-bottom: 1.5rem; }
+  .faecher img { width: clamp(3.4rem, 10vw, 6rem); aspect-ratio: 1; object-fit: contain; border-radius: 0; margin: 0; rotate: var(--dreh); filter: brightness(0) invert(1) opacity(.13); transition: none; }
+  #sticker { font-size: 1.3rem; padding: 1rem 2.2rem; margin-top: .5rem; }
+  #sticker:disabled { opacity: .35; cursor: not-allowed; }
+  .hell .geschenk { background: var(--kerze); color: var(--nacht); border: 2px solid var(--kerze); box-shadow: 0 0 10rem -2rem var(--glut); }
+  .hell .faecher img { filter: drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(0 4px 4px #0004); animation: huepf .7s cubic-bezier(.3, 1.6, .5, 1) backwards; animation-delay: calc(var(--i) * 90ms + .8s); }
+  .hell #sticker, .hell #sticker:hover { background: var(--nacht); color: var(--kerze); }
+  @keyframes huepf { from { translate: 0 2rem; scale: .3; opacity: 0; } }
+  footer { text-align: center; padding: 2rem 1rem 6rem; font-size: 1rem; color: #f1ead6aa; }
+
+  .blatt { position: fixed; top: -3rem; z-index: 4; font-size: 1.6rem; pointer-events: none; animation: fallen linear forwards; }
+  @keyframes fallen { to { transform: translate(var(--weht), 110vh) rotate(540deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .blatt { display: none; }
+    html { scroll-behavior: auto; }
+    .brennt .wachs::after { animation: none; }
+    .nische > img, .nische::before { transition: none; }
+    .hell .faecher img { animation: none; }
+  }
+</style>
+</head>
+<body>
+<header class="anfang">
+  <div class="augen" aria-hidden="true"><i></i><i></i></div>
+  <h1>Sieben Töpfe sind jetzt leer.</h1>
+  <p>Sie hatten Wackelaugen und keine Ahnung, wie sehr wir sie mochten. Noch stehen sie im Dunkeln und gucken. Zünde jedem eine Kerze an. Traurig sein ist erlaubt, kichern auch.</p>
+  <p><a class="los" href="#der-mann">Zur ersten Kerze</a></p>
+</header>
+
+<main id="andacht">
+  <section class="ende">
+    <h2 id="schluss" aria-live="polite">Noch ist es ein bisschen dunkel hier.</h2>
+    <p id="stand">0 von 7 Kerzen brennen.</p>
+    <div class="geschenk">
+      <div class="faecher" aria-hidden="true"></div>
+      <h2 id="geschenk-titel">Hier wartet noch etwas.</h2>
+      <p id="geschenk-text" aria-live="polite">Es geht auf, sobald alle sieben Kerzen brennen.</p>
+      <p><button type="button" id="sticker" disabled>Sticker speichern</button></p>
+    </div>
+    <figure>
+      <img src="img/gruppenbild.jpg" alt="Señor Kartoffelkopf und Tingeltangel Mann nebeneinander im Grünen" loading="lazy">
+      <figcaption>Señor Kartoffelkopf und Tingeltangel Mann, als noch gegossen wurde.</figcaption>
+    </figure>
+  </section>
+</main>
+
+<footer>Für die Fensterbank. In Liebe.</footer>
+<nav class="leiste" aria-label="Kerzen"></nav>
+<button type="button" id="musik" aria-pressed="false">Musik an</button>
+<!-- musik-ab-142.mp3 ist musik.mp3 ab 1:42. Fehlt die Datei, spielt die Spieluhr. -->
+<audio id="lied" src="musik-ab-142.mp3" loop preload="auto"></audio>
+
+<script src="pflanzen.js"></script>
+<script>
+  // Stationen und Kerzenleiste aus pflanzen.js
+  document.getElementById('andacht').insertAdjacentHTML('afterbegin', PFLANZEN.map(p => `
+    <section class="pflanze" id="${p.id}">
+      <div class="altar">
+        <div class="nische">
+          <img src="sticker/${p.id}.webp" alt="${p.alt}" loading="lazy">
+          <div class="augen" aria-hidden="true"><i></i><i></i></div>
+          <div class="wachs" aria-hidden="true"></div>
+        </div>
+        <button type="button" data-kerze>Kerze für ${p.name} anzünden</button>
+      </div>
+      <div class="text">
+        <h2>${p.name}</h2>
+        <p class="satz">${p.spruch}</p>
+        <img class="foto" src="img/${p.id}.jpg" alt="" style="object-position: ${p.pos || '50% 50%'}" loading="lazy">
+        <p>${p.text}</p>
+        <dl>${p.fakten.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
+      </div>
+    </section>`).join(''));
+  document.querySelector('.leiste').innerHTML = PFLANZEN.map(p => `<a href="#${p.id}" data-fuer="${p.id}" aria-label="Zu ${p.name}"></a>`).join('');
+
+  // Augen folgen dem Zeiger; ohne Zeiger (Handy, Pause) gucken sie von selbst herum
+  const augen = [...document.querySelectorAll('.augen i')];
+  let zuletzt = 0;
+  const guck = (a, w) => { a.style.setProperty('--x', Math.cos(w) * 55 + '%'); a.style.setProperty('--y', Math.sin(w) * 55 + '%'); };
+  const zeiger = e => {
+    if (e.pointerType === 'mouse') zuletzt = Date.now();
+    document.documentElement.style.cssText = '';
+    augen.forEach(a => { const r = a.getBoundingClientRect(); guck(a, Math.atan2(e.clientY - r.top - r.height / 2, e.clientX - r.left - r.width / 2)); });
+  };
+  addEventListener('pointermove', zeiger);
+  addEventListener('pointerdown', zeiger);
+
+  // Ohne Maus (Handy): beim Scrollen fliegen die Pupillen wie bei echten Wackelaugen
+  // gegen die Bewegung und plumpsen danach federnd wieder nach unten.
+  let altesY = scrollY, ruhe;
+  addEventListener('scroll', () => {
+    const d = scrollY - altesY; altesY = scrollY;
+    if (Date.now() - zuletzt < 3000 || !d) return;
+    document.documentElement.style.cssText = '--dauer: .08s';
+    augen.forEach(a => { a.style.setProperty('--x', Math.random() * 50 - 25 + '%'); a.style.setProperty('--y', Math.max(-55, Math.min(55, -d * 5)) + '%'); });
+    clearTimeout(ruhe);
+    ruhe = setTimeout(() => {
+      document.documentElement.style.cssText = '--dauer: .6s; --kurve: cubic-bezier(.3, 2.2, .5, .8)';
+      augen.forEach(a => guck(a, Math.PI / 2 + Math.random() - .5));
+    }, 110);
+  }, { passive: true });
+  setInterval(() => {
+    if (Date.now() - zuletzt < 3000) return;
+    document.querySelectorAll('.augen').forEach(paar => { const w = Math.random() * 6.28; paar.querySelectorAll('i').forEach(a => guck(a, w)); });
+  }, 1800);
+
+  // Kerzen: Pflanze wird hell; brennen alle, fallen einmal Blätter
+  const knoepfe = [...document.querySelectorAll('[data-kerze]')];
+  knoepfe.forEach(b => b.onclick = () => {
+    const s = b.closest('.pflanze');
+    if (s.classList.contains('brennt')) return;
+    s.classList.add('brennt'); b.textContent = 'Brennt. Danke.';
+    document.querySelector(`[data-fuer="${s.id}"]`).classList.add('an');
+    const n = document.querySelectorAll('.pflanze.brennt').length;
+    document.getElementById('stand').textContent = `${n} von ${knoepfe.length} Kerzen brennen.`;
+    if (n < knoepfe.length) return;
+    document.body.classList.add('hell');
+    document.getElementById('schluss').textContent = 'Jetzt ist es hell. Danke für jeden einzelnen Blick.';
+    document.getElementById('stand').textContent = 'Alle Kerzen brennen. Macht es gut, ihr alle. Wir gießen in Gedanken weiter, diesmal vorsichtiger.';
+    document.getElementById('geschenk-titel').textContent = 'Ihr kommt mit. Alle zehn als Sticker.';
+    document.getElementById('geschenk-text').textContent = 'Aufs Handy speichern, dann in WhatsApp im Sticker-Bereich über den Stift ein Paket daraus machen. So gucken sie weiter.';
+    document.getElementById('sticker').disabled = false;
+    document.getElementById('schluss').scrollIntoView({ block: 'start' });
+    for (let i = 0; i < 28; i++) {
+      const l = document.createElement('span');
+      l.className = 'blatt'; l.textContent = '🍃'; l.setAttribute('aria-hidden', 'true');
+      l.style.left = Math.random() * 100 + 'vw';
+      l.style.setProperty('--weht', (Math.random() * 30 - 15) + 'vw');
+      l.style.animationDuration = 4 + Math.random() * 5 + 's';
+      l.style.animationDelay = Math.random() * 3 + 's';
+      l.onanimationend = () => l.remove();
+      document.body.append(l);
+    }
+  });
+
+  // Sticker: am Handy über das Teilen-Menü (dort "Bilder sichern"), sonst als Zip.
+  // Die Dateien werden vorab geladen, weil Safari das Teilen nur direkt im Klick erlaubt.
+  const stickerNamen = [...PFLANZEN.map(p => p.id), 'tingeltangel-mann-spaet', 'senor-kartoffelkopf-whiskey', 'gruppenbild'];
+  document.querySelector('.faecher').innerHTML = stickerNamen.map((n, i) => `<img src="whatsapp/${n}.png" alt="" style="--i: ${i}; --dreh: ${[-8, 5, -3, 9, -6, 4, -9, 6, -4, 7][i]}deg" loading="lazy">`).join('');
+  let stickerDateien;
+  addEventListener('load', () => stickerDateien = Promise.all(stickerNamen.map(async n =>
+    new File([await (await fetch(`whatsapp/${n}.png`)).blob()], n + '.png', { type: 'image/png' }))));
+  document.getElementById('sticker').onclick = async () => {
+    try {
+      const files = await stickerDateien;
+      if (!navigator.canShare?.({ files })) throw 0;
+      await navigator.share({ files });
+    } catch (e) { if (e?.name !== 'AbortError') location.href = 'whatsapp/verblichene-sticker.zip'; }
+  };
+
+  // Musik: musik.mp3, falls vorhanden; sonst Spieluhr aus dem Browser (eigene Melodie, MIDI-Noten, 0 = Pause)
+  const lied = document.getElementById('lied');
+  const noten = [69, 72, 76, 81, 79, 76, 72, 0, 65, 69, 72, 77, 76, 71, 68, 0];
+  let an = false, ton, takt;
+  function spieluhr() {
+    ton = new AudioContext(); let i = 0;
+    const spiel = () => {
+      const n = noten[i++ % noten.length]; if (!n) return;
+      const o = ton.createOscillator(), g = ton.createGain(), t = ton.currentTime;
+      o.type = 'sine'; o.frequency.value = 440 * 2 ** ((n - 69) / 12);
+      g.gain.setValueAtTime(.2, t); g.gain.exponentialRampToValueAtTime(.001, t + 1.4);
+      o.connect(g).connect(ton.destination); o.start(); o.stop(t + 1.5);
+    };
+    spiel(); takt = setInterval(spiel, 480);
+  }
+  const knopf = document.getElementById('musik');
+  const zeig = () => { knopf.textContent = an ? 'Musik aus' : 'Musik an'; knopf.setAttribute('aria-pressed', an); };
+  async function start(notfalls) {
+    try { await lied.play(); an = true; } catch { if (notfalls && !ton) { spieluhr(); an = true; } }
+    zeig(); return an;
+  }
+  knopf.onclick = () => {
+    if (!an) return start(true);
+    an = false; lied.pause(); if (ton) { ton.close(); ton = null; clearInterval(takt); } zeig();
+  };
+  // Von selbst starten; Browser erlauben Ton meist erst nach dem ersten Klick, dann eben dann
+  start(false).then(ok => ok || addEventListener('click', () => an || start(false), { once: true }));
+</script>
+</body>
+</html>
