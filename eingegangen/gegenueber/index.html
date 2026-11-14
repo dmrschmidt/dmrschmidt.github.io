@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="description" content="Entwurf 3: Der Friedhof als Nachtfassade. Hinter jedem Fenster steht ein eingegangener Topf und guckt.">
+<title>Das Haus gegenüber</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..800,0..100,0..1;1,9..144,300..800,0..100,0..1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../gemeinsam.css">
+<style>
+  :root { --nacht: #12231a; --wald: #1d382b; --kerze: #ffd27a; --glut: #ff9a3c; --hell: #f1ead6; --rahmen: #2f463a; }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { margin: 0; overflow: hidden; background: var(--nacht); color: var(--hell); font: 300 1.0625rem/1.6 Fraunces, Georgia, serif; }
+  h1, h2 { font-weight: 700; font-variation-settings: "SOFT" 100, "WONK" 1; line-height: .95; margin: 0; letter-spacing: -.025em; }
+  a { color: inherit; }
+  button { font: 600 1rem Fraunces, serif; color: var(--nacht); background: var(--kerze); border: 0; border-radius: 999px; padding: .7rem 1.25rem; cursor: pointer; }
+  button:hover { background: #ffe1a6; }
+  button:focus-visible, a:focus-visible, canvas:focus-visible { outline: 3px solid var(--hell); outline-offset: 3px; }
+  .nur-vorlesen { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  #haus { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+  #haus.zieht { cursor: grabbing; }
+  #haus:focus-visible { outline-offset: -3px; }
+  /* Ränder abdunkeln, damit Kopf und Knöpfe lesbar bleiben */
+  .schleier { position: fixed; inset: 0; pointer-events: none; background: linear-gradient(#0a1510e6, transparent 9.5rem), linear-gradient(transparent calc(100% - 7rem), #0a1510cc); }
+
+  .kopf { position: fixed; z-index: 2; top: 0; left: 0; right: 0; padding: max(.9rem, env(safe-area-inset-top)) 1.1rem 0; pointer-events: none; display: grid; grid-template-columns: 1fr auto; gap: .1rem 1rem; align-items: start; }
+  .kopf h1 { font-size: clamp(1.7rem, 5.5vw, 2.6rem); }
+  .kopf p { margin: .35rem 0 0; grid-column: 1; color: var(--kerze); font-weight: 500; font-size: 1rem; line-height: 1.3; }
+  .kopf a { pointer-events: auto; grid-row: 1; grid-column: 2; font-size: .9rem; font-weight: 500; text-underline-offset: .2em; white-space: nowrap; padding: .35rem 0; opacity: .8; }
+
+  .knoepfe { position: fixed; z-index: 2; right: 1rem; bottom: max(1rem, env(safe-area-inset-bottom)); display: flex; flex-wrap: wrap; gap: .5rem; justify-content: flex-end; max-width: calc(100vw - 2rem); }
+  .knoepfe button { background: #0c1812d9; color: var(--hell); backdrop-filter: blur(6px); box-shadow: inset 0 0 0 1.5px #f1ead63d; padding: .65rem 1.05rem; font-size: .95rem; }
+  .knoepfe button:hover { background: #1d382b; }
+  .knoepfe .rund { width: 2.75rem; padding: .65rem 0; font-size: 1.2rem; line-height: 1; }
+  .hinweis { position: fixed; z-index: 2; left: 50%; bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 3.6rem); translate: -50% 0; width: max-content; max-width: min(calc(100vw - 2rem), 27rem); margin: 0; padding: .8rem 1.15rem; border-radius: 1.25rem; background: var(--hell); color: var(--nacht); font-weight: 500; font-size: 1rem; line-height: 1.35; text-align: center; box-shadow: 0 .8rem 2.5rem #000a; transition: opacity .6s, translate .6s; pointer-events: none; }
+  .hinweis.weg { opacity: 0; translate: -50% 1rem; }
+  @media (min-width: 54rem) { .hinweis { left: 1rem; bottom: 1rem; translate: none; text-align: left; max-width: 24rem; } .hinweis.weg { translate: 0 1rem; } }
+  @media (max-width: 26rem) { .knoepfe { left: .6rem; right: .6rem; gap: .35rem; flex-wrap: nowrap; justify-content: space-between; max-width: none; } .knoepfe button { padding: .65rem .85rem; font-size: .9rem; white-space: nowrap; } .knoepfe .rund { width: 2.6rem; flex: none; } }
+
+  /* Besuch: ein Fenster ganz nah */
+  #besuch { position: fixed; inset: 0; z-index: 10; overflow: auto; background: radial-gradient(60rem 40rem at 50% 110%, #1d382b, transparent), #0a1510; opacity: 0; transition: opacity .35s; overscroll-behavior: contain; }
+  #besuch.da { opacity: 1; }
+  #besuch[hidden] { display: none; }
+  #zurueck { position: fixed; z-index: 11; top: max(.9rem, env(safe-area-inset-top)); left: 1rem; background: var(--hell); padding: .6rem 1.1rem; font-size: .95rem; box-shadow: 0 .4rem 1.2rem #0008; }
+  .innen { max-width: 66rem; min-height: 100%; margin: 0 auto; padding: 4.75rem 1.25rem 3.5rem; display: grid; gap: 2.25rem; align-content: center; align-items: center; }
+  @media (min-width: 54rem) { .innen { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(2rem, 6vw, 5rem); padding-inline: 2.5rem; } }
+
+  .fenster { width: min(100%, 23rem); margin: 0 auto; }
+  @media (max-width: 53.99rem) { .fenster { width: min(78%, 19rem); } }
+  .rahmen { position: relative; aspect-ratio: 4/5; border: .85rem solid var(--rahmen); border-radius: .35rem; background: linear-gradient(#070f0b, #0f1f17); overflow: hidden; box-shadow: inset 0 0 0 2px #0009, 0 0 0 2px #0006; transition: box-shadow 1.2s, border-color 1.2s; }
+  .rahmen::before { content: ""; position: absolute; inset: 0; background: radial-gradient(110% 85% at 72% 100%, #ffe2a0, #ffb85c 24%, #c9762a 55%, #5a2f10); opacity: 0; transition: opacity 1.2s; }
+  .glimmt .rahmen::before { opacity: .16; }
+  .brennt .rahmen::before { opacity: 1; }
+  .brennt .rahmen { border-color: #4a5a3c; box-shadow: inset 0 0 0 2px #ffd27a88, 0 0 9rem -1.5rem var(--glut); }
+  /* Spiegelung und Kämpfer */
+  .rahmen::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(var(--rahmen), var(--rahmen)) 0 19% / 100% .55rem no-repeat, linear-gradient(115deg, transparent 30%, #ffffff0b 30% 38%, transparent 38% 44%, #ffffff07 44% 47%, transparent 47%); }
+  .sims { height: 1.05rem; margin: 0 -1.1rem; border-radius: .2rem; background: linear-gradient(#4a6455, #33493d); box-shadow: 0 .6rem 1rem #0007; }
+  .topf { position: absolute; left: 46%; bottom: 0; translate: -50% 0; height: 74%; max-width: 86%; display: grid; justify-items: center; align-items: end; }
+  .topf .eg-bild { height: 100%; width: auto; max-width: 100%; object-fit: contain; object-position: bottom; }
+  .topf svg.eg-bild { overflow: visible; }
+  .topf .eg-koerper, .topf img.eg-bild { transition: filter 1.2s; }
+  .topf .eg-koerper { filter: brightness(.13) saturate(.2); }
+  .topf img.eg-bild { filter: brightness(.07) saturate(0); }
+  .brennt .topf .eg-koerper { filter: none; }
+  .brennt .topf img.eg-bild { filter: drop-shadow(0 0 1.2rem #ffd27a44); }
+  .augen { position: absolute; top: 40%; left: 50%; translate: -50% 0; display: flex; gap: .08em; font-size: 2.3rem; transition: opacity .5s; }
+  .augen i { position: relative; width: 1em; height: 1em; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #e9e6dc); box-shadow: inset -.06em -.08em 0 #0002, 0 .05em .15em #0006; }
+  .augen i::after { content: ""; position: absolute; inset: 27%; border-radius: 50%; background: #111; transform: translate(12%, 50%); }
+  .brennt .augen { opacity: 0; }
+  .wachs { position: absolute; right: 11%; bottom: 0; width: 1.05rem; height: 3.1rem; border-radius: 3px; background: linear-gradient(90deg, #cdbd94, #f6edd3 45%, #b9a87c); opacity: 0; translate: 0 100%; transition: opacity .4s, translate .5s cubic-bezier(.3, 1.5, .5, 1); }
+  .brennt .wachs { opacity: 1; translate: 0; }
+  .wachs::before { content: ""; position: absolute; left: 50%; top: -.45rem; width: 2px; height: .5rem; margin-left: -1px; background: #222; }
+  .wachs::after { content: ""; position: absolute; left: 50%; bottom: calc(100% + .25rem); width: 1rem; height: 1.9rem; margin-left: -.5rem; border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%; background: radial-gradient(ellipse at 50% 78%, #fff 0 16%, var(--kerze) 42%, var(--glut) 70%, transparent 74%); transform-origin: 50% 100%; animation: flackern 1.6s ease-in-out infinite; }
+  @keyframes flackern { 20% { transform: rotate(-3deg) scaleY(1.06); } 45% { transform: rotate(2deg) scaleY(.95); } 70% { transform: rotate(-1deg) scaleY(1.08); } }
+
+  .worte { min-width: 0; }
+  .adresse { margin: 0 0 .6rem; font-size: .85rem; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: #f1ead6b0; }
+  .worte h2 { font-size: clamp(2.3rem, 6.5vw, 4.4rem); overflow-wrap: anywhere; }
+  .art { margin: .7rem 0 0; color: #f1ead6c4; font-size: 1rem; }
+  .satz { font-style: italic; font-size: 1.4rem; line-height: 1.3; color: var(--kerze); margin: 1.1rem 0 1rem; max-width: 20em; }
+  .worte > p { max-width: 31em; }
+  .text { margin: 0; }
+  dl { display: grid; grid-template-columns: auto 1fr; gap: .35rem 1.25rem; margin: 1.4rem 0 0; max-width: 31em; border-top: 1px solid #f1ead633; padding-top: 1.1rem; }
+  dt { font-weight: 600; }
+  dd { margin: 0; }
+  .zahl { margin: 1.5rem 0 .9rem; font-weight: 500; }
+  #b-kerze { font-size: 1.1rem; padding: .85rem 1.6rem; }
+  .brennt #b-kerze { background: none; color: var(--kerze); cursor: default; padding-left: 0; }
+
+  /* Klingelschild */
+  #klingel { width: min(92vw, 23rem); border: 0; border-radius: 1.1rem; padding: 1.4rem; background: #1c1f1d; color: var(--hell); font: 400 1rem/1.4 Fraunces, Georgia, serif; box-shadow: 0 1.5rem 4rem #000c, inset 0 0 0 2px #f1ead622; }
+  #klingel::backdrop { background: #000a; }
+  #klingel h2 { font-size: 1.6rem; margin-bottom: .3rem; }
+  #klingel p { margin: 0 0 1rem; font-size: .9rem; color: #f1ead6b0; }
+  #klingel ul { list-style: none; margin: 0 0 1rem; padding: 0; display: grid; gap: .4rem; }
+  #klingel li button { width: 100%; display: flex; align-items: center; gap: .7rem; text-align: left; border-radius: .45rem; background: var(--hell); color: var(--nacht); padding: .55rem .8rem; font-weight: 500; }
+  #klingel li button::before { content: ""; flex: none; width: 1.05rem; height: 1.05rem; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #555, #111); box-shadow: 0 0 0 2px #0003; }
+  #klingel li button.an::before { background: radial-gradient(circle at 40% 35%, #fff, var(--kerze) 45%, var(--glut)); box-shadow: 0 0 .7rem var(--glut); }
+  #klingel li small { margin-left: auto; font-weight: 400; opacity: .65; white-space: nowrap; }
+  #klingel .zu { background: none; color: var(--hell); box-shadow: inset 0 0 0 1.5px #f1ead666; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #besuch, .hinweis, .wachs, .rahmen, .rahmen::before, .topf .eg-koerper, .topf img.eg-bild { transition: none; }
+    .wachs::after { animation: none; }
+  }
+</style>
+</head>
+<body>
+<canvas id="haus" tabindex="0" role="application" aria-label="Fassade eines endlosen Wohnblocks bei Nacht. Pfeiltasten bewegen den Blick, Enter besucht das Fenster in der Mitte, Plus und Minus zoomen."></canvas>
+<div class="schleier" aria-hidden="true"></div>
+
+<header class="kopf">
+  <h1>Das Haus gegenüber</h1>
+  <a href="../">← Entwürfe</a>
+  <p id="stand" aria-live="polite"></p>
+</header>
+
+<p class="hinweis" id="hinweis">Noch stehen sie im Dunkeln und gucken. Zieh dich durchs Haus und tipp auf ein Fenster.</p>
+
+<div class="knoepfe">
+  <button type="button" id="heim">Zum Eingang</button>
+  <button type="button" id="schild">Klingelschild</button>
+  <button type="button" class="rund" id="raus" aria-label="Weiter weg">−</button>
+  <button type="button" class="rund" id="rein" aria-label="Näher ran">+</button>
+</div>
+<p class="nur-vorlesen" id="ansage" aria-live="polite"></p>
+
+<section id="besuch" hidden role="dialog" aria-modal="true" aria-labelledby="b-name">
+  <button type="button" id="zurueck">← Zur Fassade</button>
+  <div class="innen">
+    <div class="fenster">
+      <div class="rahmen"><div class="topf" id="b-topf"></div><i class="wachs" aria-hidden="true"></i></div>
+      <div class="sims"></div>
+    </div>
+    <div class="worte">
+      <p class="adresse" id="b-adresse"></p>
+      <h2 id="b-name"></h2>
+      <p class="art" id="b-art"></p>
+      <p class="satz" id="b-satz"></p>
+      <p class="text" id="b-text"></p>
+      <dl id="b-fakten"></dl>
+      <p class="zahl" id="b-zahl" aria-live="polite"></p>
+      <button type="button" id="b-kerze">Kerze ins Fenster stellen</button>
+    </div>
+  </div>
+</section>
+
+<dialog id="klingel" aria-labelledby="k-titel">
+  <h2 id="k-titel">Hausnummer 7</h2>
+  <p>Bitte nicht klingeln. Es macht keiner mehr auf. Besuchen geht trotzdem.</p>
+  <ul id="k-liste"></ul>
+  <button type="button" class="zu">Schließen</button>
+</dialog>
+
+<script src="../../tote-maenner/pflanzen.js"></script>
+<script src="../gemeinsam.js"></script>
+<script>
+(() => {
+  // --- Maße in Welt-Einheiten: eine Zelle = ein Fenster samt Wand drumherum ---
+  const CW = 120, CH = 150, STRASSE = 64, ZMIN = 0.16, ZMAX = 2.6, TREPPE = 6;
+  const cv = document.getElementById('haus'), ctx = cv.getContext('2d');
+  const ruhig = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const mod = (a, n) => ((a % n) + n) % n;
+  const klemm = (v, a, b) => Math.max(a, Math.min(b, v));
+  const $ = (id) => document.getElementById(id);
+  let W = 0, H = 0, dpr = 1, neu = true;
+  const cam = { x: CW / 2, y: -9999, z: 1 };
+
+  // --- Eigener Merkzettel: welche Fenster leuchten meinetwegen (nur dieser Entwurf) ---
+  const KEY = 'eingegangen-gegenueber';
+  const zettel = (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } })();
+  zettel.fenster ||= {};
+  const merke = () => { try { localStorage.setItem(KEY, JSON.stringify(zettel)); } catch {} };
+
+  // --- Feste Bewohner: die sieben Gründer über dem Eingang, eigene Töpfe an ihrem Ort ---
+  const GRUENDER_ORT = [[-1, 1], [1, 1], [-2, 1], [2, 1], [-1, 2], [1, 2], [2, 2]];
+  const GRUENDER_FORM = { 'der-mann': 'ficus', 'der-kleine': 'yucca', 'tingeltangel-mann': 'yucca', 'senor-kartoffelkopf': 'baum', 'der-stachelige': 'kaktus', 'goennjamin': 'baum', 'ted-und-ned': 'yucca' };
+  const besondere = new Map(), bewohner = [];
+  const zieheEin = (p, c, f) => { besondere.set(c + ',' + f, p); bewohner.push({ p, c, f }); };
+  const ladeBewohner = () => {
+    besondere.clear(); bewohner.length = 0;
+    EG.GRUENDER.forEach((p, i) => zieheEin(p, ...GRUENDER_ORT[i]));
+    let lose = 0;
+    for (const p of EG.eigene()) {
+      const o = p.ort;
+      if (o && Number.isInteger(o.col) && Number.isInteger(o.floor) && !besondere.has(o.col + ',' + o.floor)) zieheEin(p, o.col, o.floor);
+      else { // anderswo beigesetzt: bekommt ein Fenster über den Gründern
+        let c, f;
+        do { c = [-1, 1, -2, 2][lose % 4]; f = 3 + Math.floor(lose / 4); lose++; } while (besondere.has(c + ',' + f));
+        zieheEin(p, c, f);
+      }
+    }
+    for (const b of bewohner) if (EG.brennt(b.p.id)) zettel.fenster[b.p.id] = [b.c, b.f];
+    merke();
+  };
+
+  // --- Was hinter einer Zelle steckt, aus ihrer Adresse berechnet und gemerkt ---
+  const zellen = new Map();
+  const VARIANTEN = ['glatt', 'glatt', 'glatt', 'gardine', 'gardine', 'rollo', 'kipp', 'balkon'];
+  const zelle = (c, f) => {
+    const k = c + ',' + f;
+    let z = zellen.get(k);
+    if (z) return z;
+    const h = EG.hash(c, f), r = EG.rng(h);
+    z = { c, f, k, h, ton: h % 3, phase: r() * 10 };
+    if (mod(c, TREPPE) === 0) {
+      z.typ = f === 0 ? 'tuer' : 'treppe';
+      z.licht = r() < 0.16;
+    } else {
+      z.variante = VARIANTEN[Math.floor(r() * VARIANTEN.length)];
+      if (f === 0 && z.variante === 'balkon') z.variante = 'glatt';
+      z.versatz = (r() - 0.5) * 24;
+      z.schuessel = r() < 0.045 && f > 0;
+      z.j = r() - 0.5;
+      const frei = r() < 0.1;
+      const fest = besondere.get(k);
+      if (fest) z.p = fest;
+      else if (!frei) z.p = EG.toter(h % 1000003 + 1);
+      z.typ = z.p ? 'topf' : 'frei';
+      if (z.p) {
+        z.form = z.p.echt ? GRUENDER_FORM[z.p.id] || 'ficus' : z.p.art;
+        z.andere = z.p.fremdeKerzen > 200;
+        z.meins = EG.brennt(z.p.id);
+      }
+    }
+    if (zellen.size > 25000) zellen.clear();
+    zellen.set(k, z);
+    return z;
+  };
+
+  const adresse = (c, f) => {
+    const stock = f === 0 ? 'Erdgeschoss' : f + '. Stock';
+    const n = c - Math.round(c / TREPPE) * TREPPE; // gezählt vom nächsten Eingang aus
+    return n === 0 ? stock + ', Treppenhaus' : `${stock}, ${Math.abs(n)}. Fenster ${n < 0 ? 'links' : 'rechts'}`;
+  };
+
+  // --- Zeichnen ---
+  const WAND = ['#1a3026', '#1c3429', '#182b21'];
+  const lichtfleck = (() => { // weicher Schein, einmal gemalt und dann nur noch gestempelt
+    const c = document.createElement('canvas'); c.width = c.height = 128;
+    const g = c.getContext('2d'), v = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+    v.addColorStop(0, 'rgba(255,176,84,.95)'); v.addColorStop(.35, 'rgba(255,150,60,.38)'); v.addColorStop(1, 'rgba(255,140,50,0)');
+    g.fillStyle = v; g.fillRect(0, 0, 128, 128);
+    return c;
+  })();
+  let blick = null; // Zeiger in Weltkoordinaten, die Augen schauen hin
+
+  const strich = (breite, pfad) => { ctx.lineWidth = breite; ctx.beginPath(); pfad(); ctx.stroke(); };
+  const blatt = (x, y, rx, ry, dreh) => { ctx.beginPath(); ctx.ellipse(x, y, rx, ry, dreh, 0, 7); ctx.fill(); };
+
+  const malTopf = (x, b, z, farbe) => {
+    ctx.fillStyle = ctx.strokeStyle = farbe; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x - 11, b - 16); ctx.lineTo(x + 11, b - 16); ctx.lineTo(x + 8, b); ctx.lineTo(x - 8, b); ctx.closePath(); ctx.fill();
+    ctx.fillRect(x - 12.5, b - 20, 25, 5);
+    const t = b - 20, j = z.j;
+    switch (z.form) {
+      case 'kaktus':
+        strich(11, () => { ctx.moveTo(x, t - 4); ctx.lineTo(x + j * 8, t - 24 - j * 10); });
+        if (j > -0.1) strich(4.5, () => { ctx.moveTo(x + 5, t - 12); ctx.quadraticCurveTo(x + 13, t - 13, x + 13, t - 5); });
+        break;
+      case 'yucca':
+        strich(4, () => { ctx.moveTo(x, t); ctx.lineTo(x, t - 20); });
+        strich(2.2, () => { for (let i = -2; i <= 2; i++) { ctx.moveTo(x, t - 20); ctx.quadraticCurveTo(x + i * 8, t - 34 + Math.abs(i) * 2, x + i * 11 + j * 4, t - 22 + Math.abs(i) * 9); } });
+        break;
+      case 'farn':
+        strich(1.8, () => { for (let i = -3; i <= 3; i++) { if (!i) continue; ctx.moveTo(x, t); ctx.quadraticCurveTo(x + i * 5, t - 30 + Math.abs(i) * 5, x + i * 7 + j * 3, t - 6 + Math.abs(i) * 5); } });
+        break;
+      case 'sukkulente':
+        for (let i = -2; i <= 2; i++) blatt(x + i * 5, t - 4 + Math.abs(i) * 1.5, 3, 8, i * 0.45);
+        break;
+      case 'kraut':
+        strich(1.3, () => { for (let i = -2; i <= 1; i++) { ctx.moveTo(x + i * 4 + 2, t); ctx.quadraticCurveTo(x + i * 5, t - 16, x + i * 7 + j * 8, t - 22 - (i & 1) * 9); } });
+        blatt(x + 4 + j * 8, t - 20, 2, 3.5, 0.6);
+        break;
+      case 'orchidee':
+        strich(1.1, () => { ctx.moveTo(x + 4, t); ctx.lineTo(x + 4, t - 42); });
+        strich(1.7, () => { ctx.moveTo(x + 2, t); ctx.quadraticCurveTo(x - 2, t - 36, x - 10, t - 38); ctx.quadraticCurveTo(x - 17, t - 37, x - 16, t - 26); });
+        blatt(x - 9, t + 1, 9, 2.6, 0.3); blatt(x + 10, t + 1, 8, 2.6, -0.3);
+        break;
+      case 'monstera':
+        strich(1.8, () => { ctx.moveTo(x - 2, t); ctx.quadraticCurveTo(x - 4, t - 22, x - 12, t - 24); ctx.moveTo(x + 2, t); ctx.quadraticCurveTo(x + 5, t - 28, x + 12, t - 30 + j * 6); });
+        blatt(x - 15, t - 17, 7, 9, 0.9); blatt(x + 16, t - 22 + j * 6, 7, 9, -1);
+        break;
+      case 'baum':
+        strich(5, () => { ctx.moveTo(x, t); ctx.lineTo(x + j * 3, t - 16); });
+        blatt(x + j * 3, t - 27, 17, 12, 0);
+        break;
+      default: // ficus: Stamm, drei Zweige, hängende Blätter
+        strich(2.2, () => { ctx.moveTo(x, t); ctx.quadraticCurveTo(x + j * 10, t - 20, x + j * 6, t - 40); });
+        strich(1.3, () => { for (let i = 0; i < 3; i++) { const s = i % 2 ? 1 : -1, y = t - 14 - i * 9; ctx.moveTo(x + j * 6, y); ctx.lineTo(x + j * 6 + s * 10, y - 3); } });
+        for (let i = 0; i < 3; i++) { const s = i % 2 ? 1 : -1; blatt(x + j * 6 + s * 11, t - 12 - i * 9, 2.2, 4.5, s * 0.3); }
+    }
+  };
+
+  const malAugen = (x, y, z, t, zoom) => {
+    const klein = zoom < 0.34;
+    const hell = z.meins ? '#fffaf0' : '#f1ead6';
+    if (klein) { // von weitem zwei Lichtpunkte, immer mindestens einen Pixel groß
+      const s = Math.max(2.6, 1.15 / zoom);
+      ctx.fillStyle = hell; ctx.fillRect(x - 3.6 - s / 2, y - s / 2, s, s); ctx.fillRect(x + 3.6 - s / 2, y - s / 2, s, s);
+      return;
+    }
+    if (!ruhig && (t + z.phase * 3) % (4.5 + z.phase) < 0.13) { // blinzeln
+      ctx.strokeStyle = hell; strich(0.9, () => { ctx.moveTo(x - 6.5, y); ctx.lineTo(x - 1.5, y); ctx.moveTo(x + 1.5, y); ctx.lineTo(x + 6.5, y); });
+      return;
+    }
+    let dx = 0.2, dy = 0.9;
+    if (blick) { const vx = blick.x - x, vy = blick.y - y, l = Math.hypot(vx, vy) || 1; dx = vx / l; dy = vy / l; }
+    ctx.fillStyle = hell;
+    ctx.beginPath(); ctx.arc(x - 4, y, 3.3, 0, 7); ctx.arc(x + 4, y, 3.3, 0, 7); ctx.fill();
+    ctx.fillStyle = '#0b0b0b';
+    ctx.beginPath(); ctx.arc(x - 4 + dx * 1.3, y + dy * 1.3, 1.55, 0, 7); ctx.arc(x + 4 + dx * 1.3, y + dy * 1.3, 1.55, 0, 7); ctx.fill();
+  };
+
+  const malFenster = (z, x, y, t, zoom, leuchten) => {
+    const fein = zoom >= 0.34;
+    const wx = x + 24, wy = y + 34, ww = 72, wh = 84;
+    const an = z.meins ? 2 : z.andere ? 1 : 0;
+    ctx.fillStyle = '#2f463a'; ctx.fillRect(wx - 4, wy - 4, ww + 8, wh + 8);
+    ctx.fillStyle = an === 2 ? '#ffc970' : an === 1 ? '#8f5a24' : '#0a1510'; ctx.fillRect(wx, wy, ww, wh);
+    if (an) {
+      ctx.fillStyle = an === 2 ? '#ff9a3c66' : '#c9762a44'; ctx.fillRect(wx, wy + wh * 0.5, ww, wh * 0.5);
+      leuchten.push(z);
+    } else if (fein) { // Spiegelung im dunklen Glas
+      ctx.fillStyle = '#ffffff09'; ctx.beginPath(); ctx.moveTo(wx + 8, wy); ctx.lineTo(wx + 26, wy); ctx.lineTo(wx, wy + 44); ctx.lineTo(wx, wy + 14); ctx.fill();
+    }
+    const dunkel = an === 2 ? '#3d1e08' : an === 1 ? '#27150a' : '#213a30';
+    if (fein && z.variante === 'gardine') {
+      ctx.fillStyle = an === 2 ? '#fff3d699' : an === 1 ? '#c98f4a66' : '#17291f';
+      ctx.beginPath(); ctx.moveTo(wx, wy); ctx.lineTo(wx + 22, wy); ctx.quadraticCurveTo(wx + 20, wy + 50, wx + 5, wy + wh); ctx.lineTo(wx, wy + wh); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(wx + ww, wy); ctx.lineTo(wx + ww - 22, wy); ctx.quadraticCurveTo(wx + ww - 20, wy + 50, wx + ww - 5, wy + wh); ctx.lineTo(wx + ww, wy + wh); ctx.fill();
+    }
+    if (z.typ === 'topf') {
+      const px = x + 60 + z.versatz, b = wy + wh;
+      malTopf(px, b, z, dunkel);
+      if (an === 2) { // die eigene Kerze steht daneben
+        const kx = px + (z.versatz > 0 ? -19 : 19);
+        ctx.fillStyle = '#f6edd3'; ctx.fillRect(kx - 1.6, b - 10, 3.2, 10);
+        ctx.fillStyle = '#fff'; blatt(kx, b - 14, 1.8, 3.4 + (ruhig ? 0 : Math.sin(t * 9 + z.phase) * 0.5), 0);
+      }
+      malAugen(px, b - 9, z, t, zoom);
+    } else if (fein) { // frei: ein Zettel im Fenster
+      ctx.fillStyle = '#f1ead6a6'; ctx.fillRect(x + 45, wy + 40, 30, 13);
+      ctx.fillStyle = '#12231a'; ctx.font = '700 7.5px Fraunces, Georgia, serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('FREI', x + 60, wy + 47);
+    }
+    if (fein) {
+      if (z.variante === 'rollo') {
+        ctx.fillStyle = an === 2 ? '#d99a45' : an === 1 ? '#5f3d1a' : '#16271f'; ctx.fillRect(wx, wy, ww, 30);
+        ctx.fillStyle = '#00000030'; for (let i = 5; i < 30; i += 6) ctx.fillRect(wx, wy + i, ww, 1.2);
+        ctx.fillStyle = '#2f463a'; ctx.fillRect(wx, wy + 29, ww, 2.5);
+      } else if (z.variante === 'kipp') {
+        ctx.strokeStyle = '#4a6455'; ctx.lineWidth = 2.2; ctx.beginPath();
+        ctx.moveTo(wx - 1, wy + wh); ctx.lineTo(wx + 4, wy + 3); ctx.lineTo(wx + ww - 4, wy + 3); ctx.lineTo(wx + ww + 1, wy + wh); ctx.stroke();
+      } else { ctx.fillStyle = '#2f463a'; ctx.fillRect(wx, wy + 17, ww, 3); }
+    }
+    // Sims
+    ctx.fillStyle = '#3b5547'; ctx.fillRect(x + 18, y + 118, 84, 6);
+    if (fein) {
+      ctx.fillStyle = '#00000038'; ctx.fillRect(x + 20, y + 124, 80, 3);
+      if (z.variante === 'balkon') {
+        ctx.fillStyle = '#263c31'; ctx.fillRect(x + 9, y + 137, 102, 6);
+        ctx.fillRect(x + 9, y + 97, 102, 3);
+        for (let i = 11; i <= 109; i += 9.8) ctx.fillRect(x + i - 0.8, y + 100, 1.6, 37);
+      }
+      if (z.schuessel) {
+        ctx.fillStyle = '#9aa69c'; blatt(x + 108, y + 40, 8, 5.5, -0.6);
+        ctx.strokeStyle = '#9aa69c'; strich(1.2, () => { ctx.moveTo(x + 108, y + 40); ctx.lineTo(x + 102, y + 33); });
+      }
+      if (zoom >= 0.9 && z.p) { // Namensschild unter dem Sims
+        ctx.fillStyle = an ? '#ffd27ad0' : '#f1ead670'; ctx.font = '500 8.5px Fraunces, Georgia, serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(z.p.name, x + 60, y + (z.variante === 'balkon' ? 147 : 135), 112);
+      }
+    }
+  };
+
+  const malTreppe = (z, x, y, zoom) => {
+    ctx.fillStyle = '#14261d'; ctx.fillRect(x + 40, y, 40, CH + 0.5);
+    ctx.fillStyle = z.licht ? '#27504b' : '#0c1a1b'; ctx.fillRect(x + 44, y + 6, 32, CH - 12);
+    if (zoom < 0.34) return;
+    ctx.fillStyle = '#14261d'; for (let i = 34; i < CH - 12; i += 30) ctx.fillRect(x + 44, y + i, 32, 2.5);
+    ctx.fillStyle = '#f1ead62e'; ctx.font = '700 30px Fraunces, Georgia, serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(z.f, x + 100, y + CH / 2 + 4, 34);
+  };
+
+  const hausnummer = (c) => 7 + (c / TREPPE) * 2;
+  const malTuer = (z, x, y, zoom) => {
+    const zuhause = z.c === 0;
+    ctx.fillStyle = '#14261d'; ctx.fillRect(x + 40, y, 40, 30);
+    ctx.fillStyle = '#0c1a1b'; ctx.fillRect(x + 44, y, 32, 24);
+    ctx.fillStyle = '#263c31'; ctx.fillRect(x + 24, y + 36, 72, 6); // Vordach
+    ctx.fillStyle = '#2f463a'; ctx.fillRect(x + 34, y + 46, 52, CH - 46);
+    ctx.fillStyle = zuhause ? '#a8743a' : '#3d3320'; ctx.fillRect(x + 38, y + 50, 21, 62); ctx.fillRect(x + 61, y + 50, 21, 62);
+    ctx.fillStyle = '#243a2f'; ctx.fillRect(x + 38, y + 116, 44, 30);
+    ctx.fillStyle = '#c8b98c'; ctx.fillRect(x + 62.5, y + 104, 2, 12);
+    if (zoom < 0.34) return;
+    ctx.fillStyle = '#0a1510'; ctx.fillRect(x + 91, y + 78, 15, 36); // Klingelschild
+    ctx.fillStyle = zuhause ? '#ffd27a' : '#f1ead655';
+    for (let i = 0; i < 7; i++) ctx.fillRect(x + 93.5, y + 81.5 + i * 4.4, 10, 2.2);
+    ctx.fillStyle = '#f1ead6c8'; ctx.font = '700 15px Fraunces, Georgia, serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(hausnummer(z.c), x + 20, y + 62);
+    if (zuhause && zoom >= 0.7) { ctx.font = '500 7px Fraunces, Georgia, serif'; ctx.fillStyle = '#ffd27ad0'; ctx.fillText('Klingeln', x + 98.5, y + 121); }
+  };
+
+  const mal = (t) => {
+    const z = cam.z, s = z * dpr;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.fillStyle = WAND[0]; ctx.fillRect(0, 0, cv.width, cv.height);
+    ctx.setTransform(s, 0, 0, s, Math.round(W / 2 * dpr - cam.x * s), Math.round(H / 2 * dpr - cam.y * s));
+    const li = cam.x - W / 2 / z, re = cam.x + W / 2 / z, ob = cam.y - H / 2 / z, un = cam.y + H / 2 / z;
+    const c0 = Math.floor(li / CW), c1 = Math.floor(re / CW), f0 = Math.max(0, Math.floor(-un / CH)), f1 = Math.floor(-ob / CH);
+    const fein = z >= 0.34, leuchten = [];
+    for (let f = f0; f <= f1; f++) for (let c = c0; c <= c1; c++) {
+      const ze = zelle(c, f), x = c * CW, y = -(f + 1) * CH;
+      ctx.fillStyle = WAND[ze.ton]; ctx.fillRect(x, y, CW + 0.4, CH + 0.4);
+      if (fein) { ctx.fillStyle = '#12231a'; ctx.fillRect(x, y, CW, 1.1); ctx.fillRect(x, y, 1.1, CH); }
+      if (f === 0) { ctx.fillStyle = '#0000003a'; ctx.fillRect(x, y + CH - 20, CW + 0.4, 20); }
+      if (ze.typ === 'treppe') malTreppe(ze, x, y, z);
+      else if (ze.typ === 'tuer') malTuer(ze, x, y, z);
+      else malFenster(ze, x, y, t, z, leuchten);
+      if (fein && mod(c, TREPPE) === 3) { ctx.fillStyle = '#13241b'; ctx.fillRect(x + CW - 5, y, 3.2, CH + 0.4); }
+    }
+    // Schein der erleuchteten Fenster
+    ctx.globalCompositeOperation = 'lighter';
+    for (const ze of leuchten) {
+      const x = ze.c * CW + 60, y = -(ze.f + 1) * CH + 80;
+      if (ze.meins) { ctx.globalAlpha = 0.5 + (ruhig ? 0 : Math.sin(t * 5.3 + ze.phase) * 0.06 + Math.sin(t * 13 + ze.phase * 2) * 0.04); ctx.drawImage(lichtfleck, x - 135, y - 135, 270, 270); }
+      else if (fein) { ctx.globalAlpha = 0.14; ctx.drawImage(lichtfleck, x - 85, y - 85, 170, 170); }
+    }
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+    // Straße, Laternen an jedem Eingang
+    if (un > 0) {
+      ctx.fillStyle = '#1e2b25'; ctx.fillRect(li, 0, re - li, 24);
+      if (fein) { ctx.fillStyle = '#16211c'; for (let x = Math.floor(li / 40) * 40; x < re; x += 40) ctx.fillRect(x, 0, 1.2, 24); }
+      ctx.fillStyle = '#34453c'; ctx.fillRect(li, 24, re - li, 4);
+      ctx.fillStyle = '#0b130f'; ctx.fillRect(li, 28, re - li, un - 28 + 1);
+    }
+    for (let c = Math.floor((c0 - 3) / TREPPE) * TREPPE; c <= c1 + 3; c += TREPPE) {
+      const x = c * CW + CW + 2;
+      if (un > -200 && f0 <= 1) {
+        ctx.strokeStyle = '#0a1410'; ctx.lineCap = 'round';
+        strich(3.4, () => { ctx.moveTo(x, 20); ctx.lineTo(x, -172); ctx.quadraticCurveTo(x, -186, x - 14, -186); ctx.lineTo(x - 24, -186); });
+        ctx.fillStyle = '#0a1410'; ctx.fillRect(x - 34, -188, 18, 5);
+        ctx.fillStyle = '#ffe9b8'; ctx.fillRect(x - 32, -183, 14, 2.6);
+        ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.55;
+        ctx.drawImage(lichtfleck, x - 25 - 190, -175 - 150, 380, 380);
+        ctx.globalAlpha = 0.3; ctx.drawImage(lichtfleck, x - 25 - 110, 4, 220, 34);
+        ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+      }
+    }
+    // Tastatur: Rahmen um das Fenster in der Mitte
+    if (tasten) {
+      const c = Math.floor(cam.x / CW), f = Math.max(0, Math.floor(-cam.y / CH));
+      ctx.strokeStyle = '#f1ead6'; ctx.lineWidth = 2.5 / z; ctx.setLineDash([8 / z, 6 / z]);
+      ctx.strokeRect(c * CW + 6, -(f + 1) * CH + 6, CW - 12, CH - 12); ctx.setLineDash([]);
+    }
+  };
+
+  // --- Kamera ---
+  const begrenze = () => {
+    cam.z = klemm(cam.z, ZMIN, ZMAX);
+    cam.y = Math.min(cam.y, unten() - H / 2 / cam.z);
+    neu = true;
+  };
+  // unter der Straße etwas Luft, damit die Knöpfe den Eingang nicht verdecken
+  const unten = () => STRASSE + Math.min(64 / cam.z, 90);
+  const heimZoom = () => klemm(W / 400, 0.85, 1.15);
+  let flug = null;
+  const flieg = (ziel, dauer = 450, dann) => {
+    if (ruhig) dauer = 0;
+    if (!dauer) { Object.assign(cam, ziel); begrenze(); flug = null; dann && dann(); return; }
+    flug = { von: { ...cam }, ziel: { ...cam, ...ziel }, start: performance.now(), dauer, dann };
+  };
+  const zoomAuf = (sx, sy, nz) => {
+    nz = klemm(nz, ZMIN, ZMAX);
+    const wx = cam.x + (sx - W / 2) / cam.z, wy = cam.y + (sy - H / 2) / cam.z;
+    cam.z = nz; cam.x = wx - (sx - W / 2) / nz; cam.y = wy - (sy - H / 2) / nz;
+    begrenze();
+  };
+  const nachHause = (dauer = 600) => flieg({ x: CW / 2, y: 9999, z: heimZoom() }, dauer);
+  const mitteVon = (c, f) => ({ x: c * CW + CW / 2, y: -(f + 1) * CH + CH / 2 });
+
+  const passeAn = () => {
+    dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    W = innerWidth; H = innerHeight;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    begrenze();
+  };
+
+  let tasten = false, letzte = 0;
+  const runde = (jetzt) => {
+    requestAnimationFrame(runde);
+    if (flug) {
+      const k = klemm((jetzt - flug.start) / flug.dauer, 0, 1), e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+      for (const a of ['x', 'y']) cam[a] = flug.von[a] + (flug.ziel[a] - flug.von[a]) * e;
+      cam.z = flug.von.z * Math.pow(flug.ziel.z / flug.von.z, e);
+      begrenze();
+      if (k >= 1) { const d = flug.dann; flug = null; d && d(); }
+    }
+    if (offen && !flug && $('besuch').classList.contains('da')) return; // verdeckt: nichts malen
+    if (ruhig ? !neu : (!neu && jetzt - letzte < 40)) return; // Blinzeln und Flackern brauchen keine 60 Bilder
+    letzte = jetzt; neu = false;
+    mal(jetzt / 1000);
+  };
+
+  // --- Zeiger: ziehen, kneifen, tippen ---
+  const zeiger = new Map();
+  let zog = false, kniff = null;
+  const hinweisWeg = () => { $('hinweis').classList.add('weg'); zettel.kennt = 1; merke(); };
+  cv.addEventListener('pointerdown', (e) => {
+    cv.setPointerCapture(e.pointerId);
+    zeiger.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    tasten = false; flug = null;
+    if (zeiger.size === 1) zog = false;
+    if (zeiger.size === 2) { const [a, b] = [...zeiger.values()]; kniff = { abstand: Math.hypot(a.x - b.x, a.y - b.y), z: cam.z }; zog = true; }
+  });
+  cv.addEventListener('pointermove', (e) => {
+    blick = e.pointerType === 'mouse' ? { x: cam.x + (e.clientX - W / 2) / cam.z, y: cam.y + (e.clientY - H / 2) / cam.z } : null;
+    const p = zeiger.get(e.pointerId);
+    if (!p) { neu = true; return; }
+    const dx = e.clientX - p.x, dy = e.clientY - p.y;
+    if (zeiger.size === 1) {
+      if (!zog && Math.hypot(dx, dy) < 7) return;
+      if (!zog) { zog = true; cv.classList.add('zieht'); p.x = e.clientX; p.y = e.clientY; return; }
+      cam.x -= dx / cam.z; cam.y -= dy / cam.z;
+    } else if (zeiger.size === 2 && kniff) {
+      const anderer = [...zeiger.entries()].find(([id]) => id !== e.pointerId)[1];
+      const mx = (e.clientX + anderer.x) / 2, my = (e.clientY + anderer.y) / 2;
+      cam.x -= dx / 2 / cam.z; cam.y -= dy / 2 / cam.z;
+      zoomAuf(mx, my, kniff.z * Math.hypot(e.clientX - anderer.x, e.clientY - anderer.y) / kniff.abstand);
+    }
+    p.x = e.clientX; p.y = e.clientY;
+    begrenze();
+  });
+  const los = (e) => {
+    if (!zeiger.has(e.pointerId)) return;
+    const allein = zeiger.size === 1;
+    zeiger.delete(e.pointerId); kniff = null; cv.classList.remove('zieht');
+    if (zog) hinweisWeg();
+    if (allein && !zog && e.type === 'pointerup') tipp(cam.x + (e.clientX - W / 2) / cam.z, cam.y + (e.clientY - H / 2) / cam.z);
+  };
+  cv.addEventListener('pointerup', los);
+  cv.addEventListener('pointercancel', los);
+  cv.addEventListener('pointerleave', () => { blick = null; neu = true; });
+  cv.addEventListener('wheel', (e) => {
+    e.preventDefault(); flug = null;
+    zoomAuf(e.clientX, e.clientY, cam.z * Math.exp(-e.deltaY * (e.deltaMode ? 0.05 : 0.0016)));
+  }, { passive: false });
+  addEventListener('resize', passeAn);
+
+  const tipp = (wx, wy) => {
+    if (wy >= 0) return;
+    besuche(Math.floor(wx / CW), Math.floor(-wy / CH));
+  };
+  const besuche = (c, f) => {
+    const z = zelle(c, f);
+    hinweisWeg();
+    if (z.typ === 'tuer') { if (c === 0) zeigKlingel(); return; }
+    if (z.typ === 'treppe') return;
+    if (z.typ === 'frei') {
+      EG.dialogBeisetzen((d) => {
+        EG.setzeBei({ ...d, ort: { col: c, floor: f } });
+        ladeBewohner(); zellen.delete(z.k); neu = true;
+        oeffne(c, f);
+      }, 'Fenster beziehen');
+      return;
+    }
+    oeffne(c, f);
+  };
+
+  // --- Besuch ---
+  let offen = null, vorher = 1;
+  const esc = (s) => String(s).replace(/[&<>"]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
+  const zahlText = (p) => {
+    const n = EG.kerzenZahl(p);
+    return n === 0 ? 'Hier brennt noch keine Kerze.' : n === 1 ? '1 Kerze brennt hier.' : `${n} Kerzen brennen hier schon.`;
+  };
+  const oeffne = (c, f) => {
+    const z = zelle(c, f), p = z.p;
+    if (!p) return;
+    if (!offen) vorher = cam.z;
+    offen = z;
+    const b = $('besuch');
+    $('b-topf').innerHTML = EG.svg(p) + (p.echt ? '<div class="augen" aria-hidden="true"><i></i><i></i></div>' : '');
+    $('b-adresse').textContent = `Hausnummer ${hausnummer(Math.round(c / TREPPE) * TREPPE)} · ${adresse(c, f)}`;
+    $('b-name').textContent = p.name;
+    $('b-art').textContent = p.echt ? `${p.artName} · † ${p.gestorben}, ${p.dauer}` : `${p.artName} · † ${p.gestorben} · wurde ${p.dauer} alt`;
+    $('b-satz').textContent = p.spruch;
+    $('b-text').textContent = p.text;
+    $('b-fakten').innerHTML =
+      (p.echt ? '' : `<dt>Todesursache</dt><dd>${esc(p.ursache)}</dd>`) +
+      `<dt>${p.echt ? 'Wir sagen' : 'Letzte Worte'}</dt><dd>${p.echt ? esc(p.letzte) : '„' + esc(p.letzte) + '“'}</dd>` +
+      `<dt>Es trauern</dt><dd>${esc(p.trauernde.join(' und '))}</dd>`;
+    zeigStand(b, z);
+    history.replaceState(null, '', `#${c}/${f}`);
+    b.hidden = false;
+    flieg({ ...mitteVon(c, f), z: Math.max(cam.z, Math.min(W, H) / (CH * 1.3)) }, 380, () => {
+      b.classList.add('da'); $('zurueck').focus({ preventScroll: true }); b.scrollTop = 0;
+    });
+  };
+  const zeigStand = (b, z) => {
+    b.classList.toggle('brennt', !!z.meins);
+    b.classList.toggle('glimmt', !z.meins && !!z.andere);
+    $('b-zahl').textContent = zahlText(z.p);
+    $('b-kerze').textContent = z.meins ? 'Deine Kerze steht im Fenster.' : 'Kerze ins Fenster stellen';
+    $('b-kerze').disabled = !!z.meins;
+  };
+  $('b-kerze').onclick = () => {
+    const z = offen;
+    if (!z || z.meins) return;
+    EG.zuende(z.p.id);
+    z.meins = true; zettel.fenster[z.p.id] = [z.c, z.f]; merke();
+    zeigStand($('besuch'), z); zeigZaehler(); neu = true;
+  };
+  const schliesse = () => {
+    if (!offen) return;
+    const b = $('besuch');
+    b.classList.remove('da'); neu = true;
+    history.replaceState(null, '', location.pathname + location.search);
+    setTimeout(() => { b.hidden = true; }, ruhig ? 0 : 350);
+    offen = null;
+    flieg({ z: Math.min(vorher, 1.15) }, 500);
+    cv.focus({ preventScroll: true });
+  };
+  $('zurueck').onclick = schliesse;
+
+  const zeigZaehler = () => {
+    const n = Object.keys(zettel.fenster).length;
+    $('stand').textContent = n === 0 ? 'Noch leuchtet kein Fenster deinetwegen.' : n === 1 ? '1 Fenster leuchtet deinetwegen.' : `${n} Fenster leuchten deinetwegen.`;
+  };
+
+  // --- Klingelschild ---
+  const klingel = $('klingel');
+  const zeigKlingel = () => {
+    $('k-liste').innerHTML = bewohner.map((b, i) =>
+      `<li><button type="button" data-i="${i}" class="${EG.brennt(b.p.id) ? 'an' : ''}">${esc(b.p.name)}<small>${b.f}. Stock</small></button></li>`).join('');
+    klingel.showModal();
+  };
+  $('k-liste').onclick = (e) => {
+    const knopf = e.target.closest('button'); if (!knopf) return;
+    const b = bewohner[+knopf.dataset.i];
+    klingel.close();
+    flieg({ ...mitteVon(b.c, b.f), z: Math.max(cam.z, 1) }, 500, () => oeffne(b.c, b.f));
+  };
+  klingel.querySelector('.zu').onclick = () => klingel.close();
+  klingel.addEventListener('click', (e) => { if (e.target === klingel) klingel.close(); });
+
+  // --- Knöpfe und Tasten ---
+  $('heim').onclick = () => { hinweisWeg(); nachHause(); };
+  $('schild').onclick = zeigKlingel;
+  $('rein').onclick = () => flieg({ z: klemm(cam.z * 1.6, ZMIN, ZMAX) }, 250);
+  $('raus').onclick = () => flieg({ z: klemm(cam.z / 1.6, ZMIN, ZMAX) }, 250);
+  const sage = (c, f) => {
+    const z = zelle(c, f);
+    $('ansage').textContent = adresse(c, f) + ': ' + (z.typ === 'topf' ? `${z.p.name}, ${z.meins ? 'deine Kerze brennt' : z.andere ? 'erleuchtet' : 'dunkel'}` : z.typ === 'frei' ? 'frei' : z.typ === 'tuer' ? 'Eingang' : 'Treppenhaus');
+  };
+  cv.addEventListener('keydown', (e) => {
+    const schritt = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key];
+    const c = Math.floor(cam.x / CW), f = Math.max(0, Math.floor(-cam.y / CH));
+    if (schritt) {
+      e.preventDefault(); tasten = true; hinweisWeg();
+      const nc = c + schritt[0], nf = Math.max(0, f + schritt[1]);
+      flieg(mitteVon(nc, nf), 160); sage(nc, nf);
+    } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tasten = true; besuche(c, f); }
+    else if (e.key === '+' || e.key === '=') $('rein').click();
+    else if (e.key === '-') $('raus').click();
+    else if (e.key === 'Home') nachHause();
+  });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && offen && !document.querySelector('dialog[open]')) schliesse(); });
+
+  // --- Los ---
+  ladeBewohner();
+  passeAn();
+  cam.z = heimZoom(); cam.x = CW / 2; cam.y = 9999; begrenze();
+  zeigZaehler();
+  if (zettel.kennt) $('hinweis').classList.add('weg');
+  const ziel = location.hash.match(/^#(-?\d+)\/(\d+)$/);
+  if (ziel) { Object.assign(cam, mitteVon(+ziel[1], +ziel[2])); begrenze(); oeffne(+ziel[1], +ziel[2]); }
+  document.fonts && document.fonts.ready.then(() => { neu = true; });
+  requestAnimationFrame(runde);
+
+  // Für Vorschaubilder und zum Ausprobieren in der Konsole
+  window.__haus = { cam, zelle, oeffne, schliesse, besuche, flieg, nachHause, geh: (c, f, z) => { Object.assign(cam, mitteVon(c, f)); if (z) cam.z = z; begrenze(); } };
+})();
+</script>
+</body>
+</html>
