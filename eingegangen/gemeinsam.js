@@ -211,7 +211,7 @@ const EG = (() => {
     const ay = 144 + j(3), ab = 8.5, px = j(2.6), py = j(2.6);
     const auge = (x) => `<circle cx="${x}" cy="${ay}" r="${ab}" fill="#fbfaf4"/><circle cx="${x}" cy="${ay}" r="${ab}" fill="none" stroke="#0003"/>` +
       `<circle cx="${(x + px).toFixed(1)}" cy="${(ay + 2.5 + py).toFixed(1)}" r="4.2" fill="#111"/>`;
-    return `<svg class="eg-bild" viewBox="0 0 120 170" role="img" aria-label="${p.name}, ${p.artName}, eingegangen">` +
+    return `<svg class="eg-bild" viewBox="0 0 120 170" role="img" aria-label="${String(p.name).replace(/[&<>"]/g, '')}, ${p.artName}, eingegangen">` +
       `<g class="eg-koerper">${k}${topf}</g><g class="eg-augen">${auge(50)}${auge(70)}</g></svg>`;
   };
 
