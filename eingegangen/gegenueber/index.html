@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="utf-8">
@@ -139,6 +139,7 @@
     </div>
     <div class="worte">
       <p class="adresse" id="b-adresse"></p>
+      <!-- [html-validate-disable-next empty-heading -- der Name kommt aus dem Skript] -->
       <h2 id="b-name"></h2>
       <p class="art" id="b-art"></p>
       <p class="satz" id="b-satz"></p>
@@ -177,6 +178,45 @@
   zettel.fenster ||= {};
   const merke = () => { try { localStorage.setItem(KEY, JSON.stringify(zettel)); } catch {} };
 
+  // --- Netz: mit window.EG_API teilen sich alle Besucher Kerzen und Fenster, ohne bleibt alles im Browser ---
+  // Der Server kennt nur, was jemand getan hat: Kerzen je Fenster und bezogene Fenster, in Kacheln von 32 x 32.
+  const API = window.EG_API || '';
+  const KACHEL = 32, FRISCH = 30000;
+  const netz = new Map(), kacheln = new Map();
+  let wunsch = ''; // Fenster aus dem Link, dessen Bewohner erst mit seiner Kachel kommt
+  const ruf = async (pfad, daten) => {
+    const r = await fetch(API + pfad, daten ? { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(daten) } : undefined);
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw Object.assign(new Error(j.fehler || 'netz'), { status: r.status });
+    return j;
+  };
+  const nimm = (e) => { // ein Fenster vom Server; true, wenn sich daran etwas geändert hat
+    const k = e.c + ',' + e.f, alt = netz.get(k);
+    netz.set(k, e);
+    if (alt && alt.kerzen === e.kerzen && alt.name === e.name) return false;
+    zellen.delete(k); neu = true;
+    return true;
+  };
+  const ladeKachel = (tx, ty) => {
+    const k = tx + ',' + ty, s = kacheln.get(k);
+    if (s && (s.laedt || Date.now() - s.zeit < FRISCH)) return;
+    kacheln.set(k, { laedt: true });
+    ruf(`/kachel/${tx}/${ty}`).then((d) => {
+      kacheln.set(k, { zeit: Date.now() });
+      let hier = false;
+      for (const e of d.fenster || []) {
+        const geaendert = nimm(e), ek = e.c + ',' + e.f;
+        if (geaendert && offen && offen.k === ek) hier = true;
+        if (ek === wunsch) { wunsch = ''; if (!offen) oeffne(e.c, e.f); }
+      }
+      if (hier) { offen = zelle(offen.c, offen.f); if (offen.p) fuelle(offen); }
+    }).catch(() => kacheln.set(k, { zeit: Date.now() - FRISCH + 5000 })); // in fünf Sekunden noch einmal
+  };
+  const ladeSichtbare = (c0, c1, f0, f1) => {
+    for (let ty = Math.floor(f0 / KACHEL); ty <= Math.floor(f1 / KACHEL); ty++)
+      for (let tx = Math.floor(c0 / KACHEL); tx <= Math.floor(c1 / KACHEL); tx++) ladeKachel(tx, ty);
+  };
+
   // --- Feste Bewohner: die sieben Gründer über dem Eingang, eigene Töpfe an ihrem Ort ---
   const GRUENDER_ORT = [[-1, 1], [1, 1], [-2, 1], [2, 1], [-1, 2], [1, 2], [2, 2]];
   const GRUENDER_FORM = { 'der-mann': 'ficus', 'der-kleine': 'yucca', 'tingeltangel-mann': 'yucca', 'senor-kartoffelkopf': 'baum', 'der-stachelige': 'kaktus', 'goennjamin': 'baum', 'ted-und-ned': 'yucca' };
@@ -186,7 +226,8 @@
     besondere.clear(); bewohner.length = 0;
     EG.GRUENDER.forEach((p, i) => zieheEin(p, ...GRUENDER_ORT[i]));
     let lose = 0;
-    for (const p of EG.eigene()) {
+    // Mit Netz stehen eigene Fenster auf dem Merkzettel, so wie der Server sie bestätigt hat.
+    for (const p of API ? (zettel.meine || []).map((e) => ({ ...EG.eigener(e), ort: { col: e.c, floor: e.f } })) : EG.eigene()) {
       const o = p.ort;
       if (o && Number.isInteger(o.col) && Number.isInteger(o.floor) && !besondere.has(o.col + ',' + o.floor)) zieheEin(p, o.col, o.floor);
       else { // anderswo beigesetzt: bekommt ein Fenster über den Gründern
@@ -219,13 +260,17 @@
       z.j = r() - 0.5;
       const frei = r() < 0.1;
       const fest = besondere.get(k);
+      const fern = API ? netz.get(k) : null;
       if (fest) z.p = fest;
+      else if (fern && fern.name) z.p = EG.eigener(fern);
       else if (!frei) z.p = EG.toter(h % 1000003 + 1);
       z.typ = z.p ? 'topf' : 'frei';
       if (z.p) {
         z.form = z.p.echt ? GRUENDER_FORM[z.p.id] || 'ficus' : z.p.art;
-        z.andere = z.p.fremdeKerzen > 200;
         z.meins = EG.brennt(z.p.id);
+        // Mit Netz zählen nur echte Kerzen; ohne leuchten ausgedachte Nachbarn, damit die Fassade lebt.
+        z.kerzen = API ? Math.max((fern && fern.kerzen) || 0, z.meins ? 1 : 0) : EG.kerzenZahl(z.p);
+        z.andere = API ? z.kerzen > 0 : z.p.fremdeKerzen > 200;
       }
     }
     if (zellen.size > 25000) zellen.clear();
@@ -415,6 +460,7 @@
     const li = cam.x - W / 2 / z, re = cam.x + W / 2 / z, ob = cam.y - H / 2 / z, un = cam.y + H / 2 / z;
     const c0 = Math.floor(li / CW), c1 = Math.floor(re / CW), f0 = Math.max(0, Math.floor(-un / CH)), f1 = Math.floor(-ob / CH);
     const fein = z >= 0.34, leuchten = [];
+    if (API) ladeSichtbare(c0, c1, f0, f1);
     for (let f = f0; f <= f1; f++) for (let c = c0; c <= c1; c++) {
       const ze = zelle(c, f), x = c * CW, y = -(f + 1) * CH;
       ctx.fillStyle = WAND[ze.ton]; ctx.fillRect(x, y, CW + 0.4, CH + 0.4);
@@ -564,9 +610,14 @@
     if (z.typ === 'treppe') return;
     if (z.typ === 'frei') {
       EG.dialogBeisetzen((d) => {
-        EG.setzeBei({ ...d, ort: { col: c, floor: f } });
-        ladeBewohner(); zellen.delete(z.k); neu = true;
-        oeffne(c, f);
+        const drin = () => { ladeBewohner(); zellen.delete(z.k); neu = true; oeffne(c, f); };
+        if (!API) { EG.setzeBei({ ...d, ort: { col: c, floor: f } }); drin(); return; }
+        ruf('/fenster', { ...d, col: c, floor: f }).then((r) => {
+          nimm(r.fenster); (zettel.meine ||= []).push(r.fenster); merke(); drin();
+        }).catch((e) => {
+          kacheln.delete(Math.floor(c / KACHEL) + ',' + Math.floor(f / KACHEL)); neu = true;
+          melde(e.status === 409 ? 'Da ist gerade jemand anderes eingezogen. Nimm das Fenster daneben.' : 'Das hat nicht geklappt. Versuch es gleich noch einmal.');
+        });
       }, 'Fenster beziehen');
       return;
     }
@@ -576,8 +627,13 @@
   // --- Besuch ---
   let offen = null, vorher = 1;
   const esc = (s) => String(s).replace(/[&<>"]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
-  const zahlText = (p) => {
-    const n = EG.kerzenZahl(p);
+  const melde = (text) => {
+    const h = $('hinweis');
+    h.textContent = text; h.classList.remove('weg');
+    setTimeout(() => h.classList.add('weg'), 5000);
+  };
+  const zahlText = (z) => {
+    const n = z.kerzen;
     return n === 0 ? 'Hier brennt noch keine Kerze.' : n === 1 ? '1 Kerze brennt hier.' : `${n} Kerzen brennen hier schon.`;
   };
   const oeffne = (c, f) => {
@@ -586,10 +642,19 @@
     if (!offen) vorher = cam.z;
     offen = z;
     const b = $('besuch');
+    fuelle(z);
+    history.replaceState(null, '', `#${c}/${f}`);
+    b.hidden = false;
+    flieg({ ...mitteVon(c, f), z: Math.max(cam.z, Math.min(W, H) / (CH * 1.3)) }, 380, () => {
+      b.classList.add('da'); $('zurueck').focus({ preventScroll: true }); b.scrollTop = 0;
+    });
+  };
+  const fuelle = (z) => {
+    const { c, f, p } = z, b = $('besuch');
     $('b-topf').innerHTML = EG.svg(p) + (p.echt ? '<div class="augen" aria-hidden="true"><i></i><i></i></div>' : '');
     $('b-adresse').textContent = `Hausnummer ${hausnummer(Math.round(c / TREPPE) * TREPPE)} · ${adresse(c, f)}`;
     $('b-name').textContent = p.name;
-    $('b-art').textContent = p.echt ? `${p.artName} · † ${p.gestorben}, ${p.dauer}` : `${p.artName} · † ${p.gestorben} · wurde ${p.dauer} alt`;
+    $('b-art').textContent = p.echt ? `${p.artName} · † ${p.gestorben}, ${p.dauer}` : `${p.artName} · † ${p.gestorben}${p.eigen ? '' : ` · wurde ${p.dauer} alt`}`;
     $('b-satz').textContent = p.spruch;
     $('b-text').textContent = p.text;
     $('b-fakten').innerHTML =
@@ -597,16 +662,11 @@
       `<dt>${p.echt ? 'Wir sagen' : 'Letzte Worte'}</dt><dd>${p.echt ? esc(p.letzte) : '„' + esc(p.letzte) + '“'}</dd>` +
       `<dt>Es trauern</dt><dd>${esc(p.trauernde.join(' und '))}</dd>`;
     zeigStand(b, z);
-    history.replaceState(null, '', `#${c}/${f}`);
-    b.hidden = false;
-    flieg({ ...mitteVon(c, f), z: Math.max(cam.z, Math.min(W, H) / (CH * 1.3)) }, 380, () => {
-      b.classList.add('da'); $('zurueck').focus({ preventScroll: true }); b.scrollTop = 0;
-    });
   };
   const zeigStand = (b, z) => {
     b.classList.toggle('brennt', !!z.meins);
     b.classList.toggle('glimmt', !z.meins && !!z.andere);
-    $('b-zahl').textContent = zahlText(z.p);
+    $('b-zahl').textContent = zahlText(z);
     $('b-kerze').textContent = z.meins ? 'Deine Kerze steht im Fenster.' : 'Kerze ins Fenster stellen';
     $('b-kerze').disabled = !!z.meins;
   };
@@ -614,7 +674,15 @@
     const z = offen;
     if (!z || z.meins) return;
     EG.zuende(z.p.id);
-    z.meins = true; zettel.fenster[z.p.id] = [z.c, z.f]; merke();
+    z.meins = true; z.kerzen++; zettel.fenster[z.p.id] = [z.c, z.f]; merke();
+    if (API) {
+      const e = { c: z.c, f: z.f, ...netz.get(z.k), kerzen: z.kerzen };
+      netz.set(z.k, e);
+      ruf('/kerze', { col: z.c, floor: z.f }).then((d) => {
+        e.kerzen = d.kerzen;
+        if (offen && offen.k === z.k) { offen.kerzen = d.kerzen; zeigStand($('besuch'), offen); }
+      }).catch(() => melde('Deine Kerze brennt hier, aber die anderen sehen sie gerade nicht.'));
+    }
     zeigStand($('besuch'), z); zeigZaehler(); neu = true;
   };
   const schliesse = () => {
@@ -680,7 +748,11 @@
   zeigZaehler();
   if (zettel.kennt) $('hinweis').classList.add('weg');
   const ziel = location.hash.match(/^#(-?\d+)\/(\d+)$/);
-  if (ziel) { Object.assign(cam, mitteVon(+ziel[1], +ziel[2])); begrenze(); oeffne(+ziel[1], +ziel[2]); }
+  if (ziel) {
+    Object.assign(cam, mitteVon(+ziel[1], +ziel[2])); begrenze();
+    if (API && !zelle(+ziel[1], +ziel[2]).p) wunsch = +ziel[1] + ',' + +ziel[2];
+    oeffne(+ziel[1], +ziel[2]);
+  }
   document.fonts && document.fonts.ready.then(() => { neu = true; });
   requestAnimationFrame(runde);
 

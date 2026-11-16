@@ -4,6 +4,8 @@
 // Kerzen und eigene Beisetzungen liegen im localStorage dieses Browsers.
 const EG = (() => {
   const WURZEL = new URL('.', document.currentScript.src).href;
+  // Wo Fotos und Sticker der Gründer liegen; die AWS-Fassung legt sie neben die Seite.
+  const TOTE = window.EG_TOTE || WURZEL + '../tote-maenner/';
 
   // --- Zufall, der bei gleicher Zahl immer dasselbe liefert ---
   const rng = (seed) => {
@@ -108,8 +110,8 @@ const EG = (() => {
     ursache: 'wird nicht verraten', gestorben: '2026', dauer: 'viel zu kurz',
     spruch: p.spruch, text: p.text, letzte: p.trauer, trauernde: ['die ganze Fensterbank'],
     topf: '#b5623c', fremdeKerzen: 400 + i * 37, alt: p.alt, selten: p.selten,
-    bild: WURZEL + '../tote-maenner/sticker/' + p.id + '.webp',
-    foto: WURZEL + '../tote-maenner/img/' + p.id + '.jpg',
+    bild: TOTE + 'sticker/' + p.id + '.webp',
+    foto: TOTE + 'img/' + p.id + '.jpg',
   }));
 
   // --- Speicher ---
@@ -124,11 +126,14 @@ const EG = (() => {
   const baueEigenen = (e) => {
     const basis = toter(e.seed);
     const g = 'm';
+    // wann (Millisekunden) kommt nur vom Server; lokal Beigesetzte sind immer von heute
+    const d = e.wann ? new Date(e.wann) : null;
+    const tag = d ? MONATE[d.getMonth()] + ' ' + d.getFullYear() : 'heute';
     return {
       ...basis, id: 'e' + e.seed, eigen: true, name: e.name, art: e.art, artName: ARTEN[e.art], g,
-      ursache: e.ursache, letzte: e.letzte || basis.letzte, gestorben: 'heute', fremdeKerzen: 0,
+      ursache: e.ursache, letzte: e.letzte || basis.letzte, gestorben: tag, fremdeKerzen: 0,
       spruch: 'Gegossen, geliebt, gegangen.',
-      text: e.name + ' wurde heute hier beigesetzt. ' + aus(rng(e.seed + 1), ABSCHIED).replace('{ursache}', e.ursache),
+      text: e.name + (e.wann ? ' wurde im ' + tag + ' hier beigesetzt. ' : ' wurde heute hier beigesetzt. ') + aus(rng(e.seed + 1), ABSCHIED).replace('{ursache}', e.ursache),
       ort: e.ort,
     };
   };
@@ -243,5 +248,5 @@ const EG = (() => {
     d.showModal();
   };
 
-  return { rng, hash, toter, GRUENDER, ARTEN, svg, brennt, zuende, meineKerzen, kerzenZahl, eigene, setzeBei, dialogBeisetzen };
+  return { rng, hash, toter, GRUENDER, ARTEN, svg, brennt, zuende, meineKerzen, kerzenZahl, eigene, eigener: baueEigenen, setzeBei, dialogBeisetzen };
 })();

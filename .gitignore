@@ -4,3 +4,4 @@ node_modules
 .DS_Store
 tote-maenner/raw/
 tote-maenner/musik.mp3
+dist/
